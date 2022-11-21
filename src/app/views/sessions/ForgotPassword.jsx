@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios.js';
 import { useReducer } from 'react';
+import { Helmet } from 'react-helmet';
 
 const FlexBox = styled(Box)(() => ({
   display: 'flex',
@@ -66,6 +67,9 @@ const ForgotPassword = () => {
 
   return (
     <ForgotPasswordRoot>
+      <Helmet>
+        <title>Snow Fun | ForgotPassword</title>
+      </Helmet>
       <Card className="card">
         <Grid container>
           <Grid item xs={12}>

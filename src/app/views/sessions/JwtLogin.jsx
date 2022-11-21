@@ -7,6 +7,8 @@ import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -34,8 +36,8 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: 'amirabbasraan@gmail.com',
-  password: 'Master$123',
+  email: '',
+  password: '',
   remember: true,
 };
 
@@ -52,21 +54,28 @@ const JwtLogin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const { login, isInvalid,errorMessage } = useAuth();
+  const { login, isInvalid,errorMessage,isAuthenticated } = useAuth();
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
       await login(values.email, values.password);
+      console.log("Is logged in");
       navigate('/admin/dashboard');
     } catch (e) {
       setLoading(false);
     }
   };
 
+  useEffect(()=>{
+    if(isAuthenticated) navigate('/admin/dashboard');
+  },[isAuthenticated]);
+
   return (
     <JWTRoot>
-
+      <Helmet>
+        <title>Snow Fun | Login</title>
+      </Helmet>
       <Card className="card">
         <CardHeader title="Login"/>
         {isInvalid && <Alert severity='error'>{errorMessage}</Alert>}

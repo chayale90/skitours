@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios.js';
 import { useReducer } from 'react';
+import { Helmet } from 'react-helmet';
 
 const FlexBox = styled(Box)(() => ({
   display: 'flex',
@@ -89,6 +90,9 @@ const ResetPassword = () => {
 
   return (
     <ResetPasswordRoot>
+      <Helmet>
+        <title>Snow Fun | ResetPassword</title>
+      </Helmet>
       <Card className="card">
         <Grid container>
           <Grid item xs={12}>

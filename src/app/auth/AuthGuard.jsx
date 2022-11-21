@@ -1,6 +1,7 @@
 import useAuth from 'app/hooks/useAuth';
+import { useEffect } from 'react';
 // import { flat } from 'app/utils/utils';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 // import AllPages from '../routes';
 
 // const userHasPermission = (pathname, user, routes) => {
@@ -15,6 +16,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 // };
 
 const AuthGuard = ({ children }) => {
+  const navigate = useNavigate();
   let {
     isAuthenticated,
     // user
@@ -31,6 +33,10 @@ const AuthGuard = ({ children }) => {
   // // AND COMMENT OUT BELOW authenticated VARIABLE
 
   let authenticated = isAuthenticated;
+
+  useEffect(()=>{
+    if(!isAuthenticated) navigate('/admin/session/signin');
+  },[isAuthenticated]);
 
   return (
     <>

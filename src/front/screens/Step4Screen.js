@@ -1,7 +1,9 @@
 import useApp from "front/hooks/useApp";
 import React, { useEffect, useReducer, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Steps from "../components/Steps";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -26,6 +28,7 @@ const reducer = function(state,action){
 }
 
 export default function Step4Screen(){
+    const navigate = useNavigate();
     const {templateLessons,lessons} = useApp();
     const [state,dispatch] = useReducer(reducer,{
         lessons:[]
@@ -60,7 +63,7 @@ export default function Step4Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1>Equipment Hire,</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn">Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <Button className="floating-btn" onClick={()=>navigate('/step5')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.lessons.map((lesson,i)=>{
@@ -268,7 +271,7 @@ export default function Step4Screen(){
                         <Button className="btn--add py-3 px-3">Add equipment <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={6} style={{'textAlign': 'right'}}>
-                        <Button className="btn--next py-3 px-5">Next step <i className="fa fa-chevron-right"></i></Button>
+                        <Button className="btn--next py-3 px-5">Next step <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

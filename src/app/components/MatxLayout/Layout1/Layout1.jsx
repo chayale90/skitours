@@ -4,6 +4,7 @@ import { MatxSuspense } from 'app/components';
 import useSettings from 'app/hooks/useSettings';
 import { sidenavCompactWidth, sideNavWidth } from 'app/utils/constant';
 import React, { useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet';
 import Scrollbar from 'react-perfect-scrollbar';
 import { Outlet } from 'react-router-dom';
 import Footer from '../../Footer';
@@ -87,6 +88,9 @@ const Layout1 = () => {
 
   return (
     <Layout1Root className={layoutClasses}>
+      <Helmet>
+        <title>Snow Fun | Admin</title>
+      </Helmet>
       {showSidenav && sidenavMode !== 'close' && (
         <SidenavTheme>
           <Layout1Sidenav />

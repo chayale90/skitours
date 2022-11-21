@@ -6,6 +6,7 @@ import { Paragraph } from 'app/components/Typography';
 import useAuth from 'app/hooks/useAuth';
 import { Formik } from 'formik';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -69,6 +70,9 @@ const JwtRegister = () => {
 
   return (
     <JWTRegister>
+      <Helmet>
+        <title>Snow Fun | Register</title>
+      </Helmet>
       <Card className="card">
         <Grid container>
           <Grid item sm={6} xs={12}>

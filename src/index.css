@@ -147,6 +147,13 @@ color: #FFFFFF;
   border-radius: 12px;
 }
 
+.input-field-custom input:focus,
+.input-field-custom select:focus,
+.input-field-custom textarea:focus{
+  border: 1px solid #2B4159;
+  box-shadow: none;
+}
+
 .input-field-custom label{
   font-family: 'Assistant';
   font-style: normal;
@@ -194,7 +201,7 @@ color: #FFFFFF;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: calc(50% + 5px);
+  left: calc(66% + 8px);
 }
 
 .btn-group {
@@ -209,6 +216,7 @@ color: #FFFFFF;
 
 .btn.active:hover{
   background: #2B4159;
+  color:#ffffff;
 }
 
 .btn:hover{
@@ -226,6 +234,7 @@ color: #FFFFFF;
   font-size: 20px;
   line-height: 26px;
   letter-spacing: -0.02em;
+  border:0;
   color: #D0D0D0;
 }
 
@@ -274,7 +283,7 @@ color: #FFFFFF;
   font-weight: 700;
   font-size: 20px;
   line-height: 26px;
-
+  border:none;
   color: #FFFFFF;
 }
 
@@ -355,6 +364,7 @@ input.date_picker {
   position: relative;
   flex: 1 1 auto;
   width: 1%;
+  flex-basis: 65%;
   min-width: 0;
 }
 

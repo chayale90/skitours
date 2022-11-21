@@ -4,6 +4,7 @@ import { useRoutes, Navigate } from 'react-router-dom';
 import { MatxTheme } from './components';
 import { AuthProvider } from './contexts/JWTAuthContext';
 import {AppProvider} from '../front/contexts/AppContext.js';
+import { AdminAppProvider } from './contexts/AppContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { Store } from './redux/Store';
 import AuthGuard from 'app/auth/AuthGuard';

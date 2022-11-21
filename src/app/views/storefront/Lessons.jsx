@@ -72,8 +72,14 @@ const Lessons = () => {
     error: true,
     message: null
   });
-  const handleRemove = function(){
-
+  const handleRemove = function(id){
+    console.log("id",id);
+    axios.delete(`/admin/lessons/${id}`).then(response=>{
+      const {lessons:data,message} = response.data;
+      setLessons({data,isLoading:false,error:false,message}) 
+    }).catch(err=>{
+      setLessons({...lessons,isLoading:false,error:true,message:err.message});
+    });
   }
 
   useEffect(()=>{
@@ -94,7 +100,7 @@ const Lessons = () => {
       <CardRoot elevation={6}>
         {lessons.message ? lessons.error ? 
           <Alert severity='error'>{lessons.message}</Alert> : 
-          <Alert severity='success'>{lessons.message}</Alert> : ''}
+          <Alert severity='success'>{lessons.message}</Alert> : ""}
         <CardHeader title="Lessons" action={<Button variant='outlined' onClick={()=>(navigate('/admin/lessons/add'))}>ADD</Button>}/>
         { lessons.data.length != 0 && <LessonTable items={lessons.data} onRemoveHandler={handleRemove} />}
       </CardRoot>

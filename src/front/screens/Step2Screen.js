@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Steps from "../components/Steps";
 import DatePicker from 'react-datepicker';
 import useApp from "front/hooks/useApp";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -151,7 +152,7 @@ export default function Step2Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1>Equipment Hire,</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn">Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <Button className="floating-btn" onClick={()=>navigate('/step3')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
                 </div>
                 <div className="py-md-4 px-md-5">
                     <Form>
@@ -163,7 +164,7 @@ export default function Step2Screen(){
                                 <Row>
                                     <Col md={6} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
-                                            <Form.Label><img src="/images/user-icon.png" style={{'marginRight': '5px'}} /> Date and time of landing</Form.Label>
+                                            <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}} /> Date and time of landing</Form.Label>
                                                 <InputGroup className="input-field-custom">
                                                     <DatePicker
                                                         className={arrival.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
@@ -173,7 +174,7 @@ export default function Step2Screen(){
                                                         onChange={(date)=>handleDateChange(date,i,"arr")}
                                                         selected={arrival.date.value}
                                                     />
-                                                    <Form.Select aria-label="Time" name='time' className={arrival.time.isValid ? "py-3 text-center" : "py-3 text-center is-invalid"} onChange={(e)=>handleFieldChange(e,i,"arr")} value={arrival.time.value}  style={{'borderTopRightRadius': '12px', 'borderBottomRightRadius': '12px'}}>
+                                                    <Form.Select aria-label="Time" name='time' className={arrival.time.isValid ? "py-3 text-center" : "py-3 text-center is-invalid"} onChange={(e)=>handleFieldChange(e,i,"arr")} value={arrival.time.value}  style={{'borderTopRightRadius': '12px', 'borderBottomRightRadius': '12px',flexBasis:"35%"}}>
                                                         {timeSlots.map((slot,i)=>{
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
@@ -219,7 +220,7 @@ export default function Step2Screen(){
                                         <Row className="align-items-end">
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                                    <Form.Label><img src="/images/user-icon.png" style={{'marginRight': '5px'}} /> Number of people</Form.Label>
+                                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}} /> Number of people</Form.Label>
                                                     <Form.Select aria-label="Skipass" className={arrival.number_of_people.isValid ? "py-3" : "py-3 is-invalid"} name="number_of_people" value={arrival.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                         <option value="" hidden disabled>Number of Passengers</option>
                                                         {arrival.vehicle.value && setOptions(arrival.vehicle.value.passengers)}
@@ -262,7 +263,7 @@ export default function Step2Screen(){
                                 <Row>
                                     <Col md={6} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
-                                            <Form.Label><img src="/images/user-icon.png" style={{'marginRight': '5px'}} /> Date and time of landing</Form.Label>
+                                            <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}} /> Date and time of landing</Form.Label>
                                                 <InputGroup className="input-field-custom">
                                                     <DatePicker
                                                         className={departure.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
@@ -272,7 +273,7 @@ export default function Step2Screen(){
                                                         onChange={(date)=>handleDateChange(date,i,"dept")}
                                                         selected={departure.date.value}
                                                     />
-                                                    <Form.Select aria-label="Time" className={departure.time.isValid ? "py-3 text-center" : "py-3 text-center is-invalid"} name="time" onChange={(e)=>handleFieldChange(e,i,"dept")} value={departure.time.value}  style={{'borderTopRightRadius': '12px', 'borderBottomRightRadius': '12px'}}>
+                                                    <Form.Select aria-label="Time" className={departure.time.isValid ? "py-3 text-center" : "py-3 text-center is-invalid"} name="time" onChange={(e)=>handleFieldChange(e,i,"dept")} value={departure.time.value}  style={{'borderTopRightRadius': '12px', 'borderBottomRightRadius': '12px',flexBasis:"35%"}}>
                                                         {timeSlots.map((slot,i)=>{
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
@@ -318,7 +319,7 @@ export default function Step2Screen(){
                                         <Row className="align-items-end">
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                                    <Form.Label><img src="/images/user-icon.png" style={{'marginRight': '5px'}} /> Number of people</Form.Label>
+                                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}} /> Number of people</Form.Label>
                                                     <Form.Select aria-label="Skipass" className={departure.number_of_people.isValid ? "py-3" : "py-3 is-invalid"}  name="number_of_people" value={departure.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                         <option value="" hidden disabled>Number of Passengers</option>
                                                         {departure.vehicle.value && setOptions(departure.vehicle.value.passengers)}
@@ -359,7 +360,7 @@ export default function Step2Screen(){
                         <Button className="btn--add py-3 px-3" onClick={handleDepartureAdd}>Add Departure <i className="fa fa-plus"></i></Button>
                     </Col>
                     <Col md={4} xs={6} style={{'textAlign': 'right'}}>
-                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step <i className="fa fa-chevron-right"></i></Button>
+                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

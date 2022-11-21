@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Steps from "../components/Steps";
 import DatePicker from 'react-datepicker';
 import useApp from "front/hooks/useApp";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -103,7 +104,7 @@ export default function Step3Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1>Equipment Hire,</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn">Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <Button className="floating-btn" onClick={()=>navigate('/step4')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.equipments.map((equipment,i)=>{
@@ -216,7 +217,7 @@ export default function Step3Screen(){
                         <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}>Add equipment <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={6} style={{'textAlign': 'right'}}>
-                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step <i className="fa fa-chevron-right"></i></Button>
+                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

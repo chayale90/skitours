@@ -1,4 +1,4 @@
-import { Box, CardHeader,Alert,Button,Card,styled} from '@mui/material';
+import { Box, CardHeader,Alert,Button,Card,styled, Grid,InputAdornment} from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,6 +23,7 @@ export default function Equipments() {
   });
   const [open,setOpen] = useState(false);
   const [name,setName] = useState('');
+  const [price,setPrice] = useState(0);
 
   function handleClose() {
     setOpen(false);
@@ -31,7 +32,8 @@ export default function Equipments() {
   const onSubmitHandler = function(e){
     e.preventDefault();
     const data = {
-      name
+      name,
+      price
     }
     axios.post('/admin/storefront/add-equipment',{
       data
@@ -70,17 +72,36 @@ export default function Equipments() {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Add Equipment</DialogTitle>
         <DialogContent>
-          <TextField
-            required
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            fullWidth
-          />
+          <Grid container>
+            <Grid item xs={12} md={6}>
+              <TextField
+                required
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Name"
+                type="text"
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                  required
+                  margin="dense"
+                  id="price"
+                  label="Price(per day)"
+                  type="number"
+                  value={price}
+                  onChange={(e)=>setPrice(e.target.value)}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">₪</InputAdornment>,
+                  }}
+                  fullWidth
+                />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" color="secondary" onClick={handleClose}>

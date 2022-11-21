@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import Steps from "../components/Steps";
 import useApp from 'front/hooks/useApp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -53,7 +54,6 @@ export default function Step1Screen(){
 
     function handleArrDateChange(date){
         dispatch({type:"ARRDATE_SAVE", payload:date});
-        console.log("arr>>",date);
         let a = new Date(date).getTime();
         if(state.deptDate.value){
             let b = new Date(state.deptDate.value).getTime();
@@ -109,14 +109,14 @@ export default function Step1Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1>Hello Surfer,</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn">Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <Button className="floating-btn" onClick={()=>navigate('/step2')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
                 </div>
                 <div className="py-md-4 px-md-5">
                     <Form>
                         <Row>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
-                                    <Form.Label><img src="/images/user-icon.png" style={{'marginRight': '5px'}}/> Full Name</Form.Label>
+                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}}/> Full Name</Form.Label>
                                     <Form.Control className={state.fullName.isValid ? 'py-3' : 'py-3 is-invalid'} type="text" value={state.fullName.value} placeholder="Doron Israel Shlomo" onChange={(e)=>dispatch({type:"FULLNAME_SAVE",payload:e.target.value})}/>
                                 </Form.Group>
                             </Col>
@@ -164,7 +164,7 @@ export default function Step1Screen(){
                 <Row className="d-flex justify-content-between">
                     <Col md={12} style={{'textAlign': 'right'}}>
                         <Link to="/step2">
-                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step <i className="fa fa-chevron-right"></i></Button>
+                        <Button className="btn--next py-3 px-5" >Next step <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                         </Link>
                     </Col>
                 </Row>

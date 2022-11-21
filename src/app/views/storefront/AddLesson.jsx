@@ -190,7 +190,7 @@ const AddLesson = () => {
                 fullWidth
               />
             </Grid>
-          </Grid>
+        </Grid>
           <h5 style={{'margin':'2rem 0'}}>Add Days <Tooltip title="Plus Day price will be apply on extra days which are not added in the Lesson." placement='top'><Icon>info</Icon></Tooltip></h5>
           <Grid container spacing={2}>
             <Grid item xs={12} md={5}>

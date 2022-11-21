@@ -15,7 +15,7 @@ const dashboardRoutes = [
   { path: '/admin/settings', element: <Settings/>, auth: authRoles.admin },
   { path: '/admin/lessons', element: <Lessons/>, auth: authRoles.admin },
   { path: '/admin/lessons/add', element: <AddLesson/>, auth: authRoles.admin },
-  { path: '/admin/lessons/edit', element: <EditLesson/>, auth: authRoles.admin },
+  { path: '/admin/lessons/edit/:id', element: <EditLesson/>, auth: authRoles.admin },
 ];
 
 export default dashboardRoutes;
