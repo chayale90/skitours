@@ -2,12 +2,21 @@ export const navigations = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: 'dashboard' },
   { 
     name: 'Storefront', 
-    icon: 'dashboard',
+    icon: 'web',
     children: [
-      { name: 'Assets', iconText: 'SI', path: '/admin/storefront' },
-      { name: 'Lessons', iconText: 'LE', path: '/admin/lessons' },
+      { name: 'Assets', iconText: 'SI', path: '/admin/storefront' }
     ]
   },
+  {
+    name: 'Lessons',
+    icon: 'castforeducation',
+    children: [
+      {name: 'All', iconText: 'AL', path: '/admin/lessons'},
+      {name: 'Availability', iconText: 'AV', path: '/admin/lessons/availability'},
+      {name: 'Skill Levels', iconText: 'SL', path: '/admin/lessons/skill-levels'}
+    ]
+  },
+  { name: "Translations", path: '/admin/translations', icon: 'language' },
   { name: 'Settings', path: '/admin/settings', icon: 'settings' },
   // { label: 'PAGES', type: 'label' },
   // {

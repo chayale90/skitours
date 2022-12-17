@@ -7,12 +7,12 @@ import App from './app/App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <StyledEngineProvider injectFirst>
-    <BrowserRouter>
-      <CssBaseline />
-      <App />
-    </BrowserRouter>
-  </StyledEngineProvider>,
+    <StyledEngineProvider injectFirst>
+      <BrowserRouter>
+        <CssBaseline />
+        <App />
+      </BrowserRouter>
+    </StyledEngineProvider>,
   document.getElementById('root')
 );
 

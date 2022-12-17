@@ -55,6 +55,11 @@ body{
   border-radius: 50%;
   border: 2px solid #8BA4C0;
 }
+.steps.visited {
+  color: #ffffff;
+  background-color: #60c4d3;
+  border: none;
+}
 .steps.active {
   color: #ffffff;
   background-color: #2B4159;
@@ -140,11 +145,16 @@ color: #FFFFFF;
   line-height: 26px;
   letter-spacing: -0.02em;
 
-  color: #B9B9B9;
+  color: #2B4159;
 
   background: #FDFDFD;
   border: 1px solid #E0E0E0;
   border-radius: 12px;
+}
+
+.input-field-custom input:disabled,
+.input-field-custom select:disabled{
+  color: #D0D0D0;
 }
 
 .input-field-custom input:focus,
@@ -300,6 +310,12 @@ color: #FFFFFF;
   letter-spacing: -0.02em;
 
   color: #D0D0D0;
+}
+
+.btn--check:disabled{
+  color: #B9B9B9;
+  background-color: #e9ecef;
+  border-color: #E0E0E0;
 }
 
 .btn--check.active{

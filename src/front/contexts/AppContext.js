@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useReducer } from 'react'
 import axios from 'axios.js'
 import MatxLoading from '../components/MatxLoading';
+import { getDateArray } from 'front/utils';
 
 const templateTransfers = {
   date: {
@@ -66,7 +67,7 @@ const templateLessons = {
     isValid: true
   },
   number_of_people: {
-    value: '',
+    value: 'One',
     isValid: true
   },
   skill_level: {
@@ -85,23 +86,17 @@ const templateLessons = {
     value: "adult",
     isValid: true
   },
-  dates: [
-    {
-      date: Date.now(),
-      time: "09:00 - 11:00"
-    },
-    {
-      date: Date.now(),
-      time: "09:00 - 11:00"
-    },
-    {
-      date: Date.now(),
-      time: "09:00 - 11:00"
-    }
-  ]
+  dates: []
 }
 
 const initialState = {
+  steps: [
+    {title: 'step1',visited: true},
+    {title: 'step2',visited: false},
+    {title: 'step3',visited: false},
+    {title: 'step4',visited: false},
+    {title: 'step5',visited: false}
+  ],
   isInitialised: false,
   templateTransfers,
   templateEquipments,
@@ -117,7 +112,13 @@ const initialState = {
   arrivals: [],
   departures: [],
   equipments: [],
+  lessonsData: [],
   lessons:[],
+  translations: {},
+  language: {
+    locale: 'he-IL',
+    defaultLocale : 'he-IL'
+  },
   currency:   {
     code: "EUR",
     symbol: "€"
@@ -130,12 +131,25 @@ const reducer = (state, action) => {
         return {
           ...state,airports:action.payload.assets.airports,
           helmets:action.payload.assets.helmets,
-          equipmentTypes:action.payload.assets.equipments, 
+          equipmentTypes:action.payload.assets.equipments,
+          lessonsData:action.payload.assets.lessons,
           vehicles:action.payload.assets.vehicles,isInitialised:true,
           arrivals:[state.templateTransfers],departures:[state.templateTransfers],
           equipments:[state.templateEquipments],
-          lessons:[state.templateLessons]
+          lessons:[state.templateLessons],
+          translations: action.payload.translations
         }
+      case 'CHANGE_LOCALE':
+        return {...state, language: {...state.language, locale: action.payload}};
+      case 'CHANGE_STEP_VISITED':
+        const steps = state.steps.map((step)=>{
+          if(step.title === action.payload){
+            return {...step,visited:true}
+          }else{
+            return step
+          }
+        })
+        return {...state, steps}
       case 'SAVE_STEP_1':
         const arrs = state.arrivals.map((item)=>{
           return {...item,date:{...item.date,value:action.payload.arrDate}};
@@ -143,13 +157,18 @@ const reducer = (state, action) => {
         const depts = state.departures.map((item)=>{
           return {...item,date:{...item.date,value:action.payload.deptDate}};
         })
+        const lessons = state.lessons.map((lesson)=>{
+          return {...lesson,dates:[...action.payload.lessonDates]};
+        })
         return {
           ...state, fullName: action.payload.fullName, 
           arrivalDate: action.payload.arrDate, 
           departureDate: action.payload.deptDate,
           target: action.payload.target,
           arrivals: arrs,
-          departures:depts
+          departures:depts,
+          templateLessons: {...state.templateLessons,dates: action.payload.lessonDates},
+          lessons
         };
       case 'SAVE_STEP_2':
         return {
@@ -172,20 +191,51 @@ const AppContext = createContext({
     ...initialState,
     addStepOne: () => Promise.resolve(),
     addStepTwo: () => Promise.resolve(),
-    addStepThree: () => Promise.resolve()
+    addStepThree: () => Promise.resolve(),
+    changeStepVisited: () => {},
+    changeLocale: () => {}
 })
 
 export const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
+    const changeLocale = (locale) => {
+      dispatch({
+        type: "CHANGE_LOCALE",
+        payload: locale
+      })
+    }
+
+    const changeStepVisited = (title) => {
+      dispatch({
+        type: "CHANGE_STEP_VISITED",
+        payload:title
+      })
+    }
+
     const addStepOne = async (data) => {
+
+      //Set dates for Lessons
+      var lessonDates = [];
+      const dates = getDateArray(data.arrDate,data.deptDate);
+      if(dates){
+        dates.forEach((date)=>{
+          lessonDates.push({
+            date : date,
+            time: '09:00 - 11:00',
+            hours: '2',
+            isSelected: false
+          })
+        })
+      }
       dispatch({
         type: "SAVE_STEP_1",
         payload: {
           fullName: data.fullName, 
           arrDate: data.arrDate, 
           deptDate: data.deptDate,
-          target: data.target
+          target: data.target,
+          lessonDates
         }
       })
     }
@@ -211,12 +261,16 @@ export const AppProvider = ({ children }) => {
 
     useEffect(() => {
         ; (async () => {
+            document.dir = "rtl";
             try {
                     const response = await axios.get('/api/assets')
                     const { assets } = response.data
+                    console.log("LessonsData",assets.lessons);
+                    const transResponse = await axios.get('/api/translations');
+                    const {translations} = transResponse.data;
                     dispatch({
                         type: 'INIT',
-                        payload: {assets},
+                        payload: {assets,translations},
                     })
             } catch (err) {
                 dispatch({type: 'INIT'})
@@ -235,7 +289,9 @@ export const AppProvider = ({ children }) => {
                 // login
                 addStepOne,
                 addStepTwo,
-                addStepThree
+                addStepThree,
+                changeStepVisited,
+                changeLocale
             }}
         >
             {children}

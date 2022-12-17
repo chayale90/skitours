@@ -5,6 +5,7 @@ import Steps from "../components/Steps";
 import DatePicker from 'react-datepicker';
 import useApp from "front/hooks/useApp";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { FormattedMessage,useIntl } from "react-intl";
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -34,7 +35,8 @@ const reducer = function(state,action){
 
 export default function Step3Screen(){
     const navigate = useNavigate();
-    const {equipments,templateEquipments,addStepThree,helmets,equipmentTypes} = useApp();
+    const intl = useIntl();
+    const {equipments,templateEquipments,addStepThree,helmets,equipmentTypes,changeStepVisited} = useApp();
     const [state, dispatch] = useReducer(reducer,{
         equipments:[]
     });
@@ -59,6 +61,11 @@ export default function Step3Screen(){
 
     function handleAddEquipment(){
         dispatch({type:"ADD_EQUIPMENT",payload:templateEquipments});
+    }
+
+    function handleSkipStep(){
+        changeStepVisited('step4');
+        navigate('/step4');
     }
 
     function handleNext(e){
@@ -91,6 +98,7 @@ export default function Step3Screen(){
         }
         addStepThree({equipments: state.equipments})
         navigate('/step4');
+        changeStepVisited('step4');
     }
 
     useEffect(()=>{
@@ -102,9 +110,9 @@ export default function Step3Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="form-container-box small-container w-100">
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
-                    <h1>Equipment Hire,</h1>
-                    <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn" onClick={()=>navigate('/step4')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <h1><FormattedMessage id="step3_desc_title"/></h1>
+                    <p><FormattedMessage id="step3_desc_text"/></p>
+                    <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/> <i className="fa fa-info-circle mx-1"></i></Button>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.equipments.map((equipment,i)=>{
@@ -118,7 +126,7 @@ export default function Step3Screen(){
                                         <Form.Label className="d-md-none">Full Name</Form.Label>
                                         <Form.Control name="name" onChange={(e)=>handleFieldChange(e,i)} type="text"
                                         value={equipment.name.value}
-                                        className={equipment.name.isValid ? 'py-3' : 'py-3 is-invalid'} placeholder="Doron Israel Shlomo"/>
+                                        className={equipment.name.isValid ? 'py-3' : 'py-3 is-invalid'} placeholder={intl.formatMessage({id:"step3_name_placeholder"})}/>
                                         <img src="/images/user-icon.png" className="field-icon"/>
                                     </Form.Group>
                                 </Col>
@@ -131,7 +139,7 @@ export default function Step3Screen(){
                                                     className={equipment.first_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
                                                     dateFormat="EEEE d MMMM yyyy"  
                                                     minDate={new Date()}
-                                                    placeholderText="First date of hire"
+                                                    placeholderText={intl.formatMessage({id:"step3_hire_date_first_placeholder"})}
                                                     name="first_date"
                                                     onChange={(date)=>handleDateChange(date,i,'first_date')}
                                                     selected={equipment.first_date.value}
@@ -145,7 +153,7 @@ export default function Step3Screen(){
                                                     className={equipment.last_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
                                                     dateFormat="EEEE d MMMM yyyy"  
                                                     minDate={new Date()}
-                                                    placeholderText="Last date of hire"
+                                                    placeholderText={intl.formatMessage({id:"step3_hire_date_last_placeholder"})}
                                                     name="last_date"
                                                     onChange={(date)=>handleDateChange(date,i,'last_date')}
                                                     selected={equipment.last_date.value}
@@ -159,19 +167,19 @@ export default function Step3Screen(){
                             <Row className="align-items-end">
                                 <Col md={5} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                <Form.Label><img src="/images/calander.png" style={{'marginRight':'5px'}}/>Equipment Type</Form.Label>
+                                <Form.Label><img src="/images/calander.png" style={{'marginRight':'5px'}}/><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
                                 <div className="btn-group d-flex" data-toggle="buttons">
                                     <label className={equipment.age_type.value === 'child' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="child" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'child'} />
-                                            Child
+                                            <FormattedMessage id="step3_equipment_type_option_1"/>
                                     </label>
                                     <label className={equipment.age_type.value === 'adult' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="adult" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'adult'}/>
-                                            Adult
+                                        <FormattedMessage id="step3_equipment_type_option_2"/>
                                     </label>
                                     <label className={equipment.age_type.value === 'expert' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="expert" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'expert'}/>
-                                            Expert
+                                        <FormattedMessage id="step3_equipment_type_option_3"/>
                                     </label>
                                 </div>
                                 </Form.Group>
@@ -182,7 +190,7 @@ export default function Step3Screen(){
                                     <Form.Select aria-label="Skipass" className={equipment.equipment_type.isValid ? "py-3" : "py-3 is-invalid"} 
                                     value={equipment.equipment_type.value.id}
                                     name="equipment_type" onChange={(e)=>handleFieldChange(e,i)}>
-                                        <option>Select equipment</option>
+                                        <option>{intl.formatMessage({id:"step3_select_equipment_placeholder"})}</option>
                                         {equipmentTypes.map((e)=>{
                                             return <option key={e.id} value={e.id}>{e.name}</option>
                                         })}
@@ -191,11 +199,11 @@ export default function Step3Screen(){
                                 </Col>
                                 <Col md={3} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Label>Add a helmet?</Form.Label>
+                                    <Form.Label><FormattedMessage id="step3_helmet_title"/></Form.Label>
                                     <Form.Select aria-label="Skipass" name="helmet" onChange={(e)=>handleFieldChange(e,i)}
                                     value={equipment.helmet.value.id}
                                     className={equipment.helmet.isValid ? "py-3" : "py-3 is-invalid"}>
-                                        <option value="" hidden>Helmet?</option>
+                                        <option value="" hidden>{intl.formatMessage({id:"step3_helmet_placeholder"})}</option>
                                         {helmets.map((h)=>{
                                             return <option key={h.id} value={h.id}>{h.name}</option>
                                         })}
@@ -213,11 +221,11 @@ export default function Step3Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={8} xs={6}>
-                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block">Save</Button>
-                        <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}>Add equipment <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
+                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block"><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={6} style={{'textAlign': 'right'}}>
-                        <Button className="btn--next py-3 px-5" onClick={handleNext}>Next step <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                        <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

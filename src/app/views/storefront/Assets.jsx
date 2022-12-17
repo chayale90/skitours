@@ -5,7 +5,6 @@ import Airports from './shared/Airports';
 import Helments from './shared/Helments';
 import Equipments from './shared/Equipments';
 import LessonTypes from './shared/LessonType';
-import SkillLevels from './shared/SkillLevel';
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -29,8 +28,6 @@ const Assets = () => {
       <Helments/>
       <Equipments/>
       <LessonTypes/>
-      <SkillLevels/>
-
     </Container>
   );
 };

@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import Steps from "../components/Steps";
 import useApp from 'front/hooks/useApp';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { FormattedMessage,useIntl } from "react-intl";
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -31,7 +32,8 @@ const reducer = function(state,action){
 
 export default function Step1Screen(){
     const navigate = useNavigate();
-    const {addStepOne,fullName,target,departureDate,arrivalDate} = useApp();
+    const Intl = useIntl();
+    const {addStepOne,fullName,target,departureDate,arrivalDate,changeStepVisited} = useApp();
 
     const [state, dispatch] = useReducer(reducer,{
         fullName: {
@@ -97,6 +99,7 @@ export default function Step1Screen(){
                 deptDate: state.deptDate.value
             });
             navigate('/step2');
+            changeStepVisited('step2');
         }
 
     }
@@ -107,23 +110,23 @@ export default function Step1Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="form-container-box small-container w-100">
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
-                    <h1>Hello Surfer,</h1>
-                    <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn" onClick={()=>navigate('/step2')}>Skip step <i className="fa fa-info-circle mx-1"></i></Button>
+                    <h1><FormattedMessage id="step1_desc_title"/></h1>
+                    <p><FormattedMessage id="step1_desc_text"/></p>
+                    {/* <Button className="floating-btn" onClick={()=>navigate('/step2')}><FormattedMessage id="btn_skip_text"/> <i className="fa fa-info-circle mx-1"></i></Button> */}
                 </div>
                 <div className="py-md-4 px-md-5">
                     <Form>
                         <Row>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
-                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}}/> Full Name</Form.Label>
-                                    <Form.Control className={state.fullName.isValid ? 'py-3' : 'py-3 is-invalid'} type="text" value={state.fullName.value} placeholder="Doron Israel Shlomo" onChange={(e)=>dispatch({type:"FULLNAME_SAVE",payload:e.target.value})}/>
+                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}}/> <FormattedMessage id="step1_name_title"/></Form.Label>
+                                    <Form.Control className={state.fullName.isValid ? 'py-3' : 'py-3 is-invalid'} type="text" value={state.fullName.value} placeholder={Intl.formatMessage({id:'step1_name_placeholder'})} onChange={(e)=>dispatch({type:"FULLNAME_SAVE",payload:e.target.value})}/>
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
-                                    <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} />Where do you fly to?</Form.Label>
-                                    <Form.Control className={state.target.isValid ? 'py-3' : 'py-3 is-invalid'} value={state.target.value} type="text" placeholder="target" onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}/>
+                                    <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} /><FormattedMessage id="step1_target_title"/></Form.Label>
+                                    <Form.Control className={state.target.isValid ? 'py-3' : 'py-3 is-invalid'} value={state.target.value} type="text" placeholder={Intl.formatMessage({id:'step1_target_Placeholder'})} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}/>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -131,13 +134,13 @@ export default function Step1Screen(){
                         <Row className="align-items-end">
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                <Form.Label><img src="images/calander.png" style={{'marginRight':'5px'}}/> Arrival and departure times from the area</Form.Label>
+                                <Form.Label><img src="images/calander.png" style={{'marginRight':'5px'}}/> <FormattedMessage id="step1_dates_title"/></Form.Label>
                                 <DatePicker
                                     className={state.arrDate.isValid ? 'py-3 date_picker form-control' : 'py-3 is-invalid date_picker form-control'}
                                     onChange={ handleArrDateChange }  
                                     dateFormat="EEEE d MMMM yyyy"  
                                     minDate={new Date()}
-                                    placeholderText="Arrival-date"
+                                    placeholderText={Intl.formatMessage({id:'step1_arrival_date_placeholder'})}
                                     selected={state.arrDate.value}
                                 />
                                 </Form.Group>
@@ -149,7 +152,7 @@ export default function Step1Screen(){
                                     onChange={ (date) => dispatch({type:"DEPTDATE_SAVE",payload:date})}  
                                     dateFormat="EEEE d MMMM yyyy"  
                                     minDate={state.arrDate.value ? state.arrDate.value : new Date()}
-                                    placeholderText="Departure-date"
+                                    placeholderText={Intl.formatMessage({id:'step1_departure_date_placeholder'})}
                                     selected={state.deptDate.value}
                                 />
                                 </Form.Group>
@@ -164,7 +167,7 @@ export default function Step1Screen(){
                 <Row className="d-flex justify-content-between">
                     <Col md={12} style={{'textAlign': 'right'}}>
                         <Link to="/step2">
-                        <Button className="btn--next py-3 px-5" >Next step <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                        <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                         </Link>
                     </Col>
                 </Row>
