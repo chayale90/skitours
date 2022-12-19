@@ -190,19 +190,16 @@
 .home-nav {
   display: flex;
 }
+.home-icon:last-child{
+  margin-right: 0;
+}
+html[dir="rtl"] .home-icon:last-child{
+  margin-right: var(--dl-space-space-twounits);
+}
 .home-icon {
   width: var(--dl-size-size-xsmall);
   height: var(--dl-size-size-xsmall);
   margin-right: var(--dl-space-space-twounits);
-}
-.home-icon02 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-  margin-right: var(--dl-space-space-twounits);
-}
-.home-icon04 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
 }
 .home-burger-menu {
   display: none;

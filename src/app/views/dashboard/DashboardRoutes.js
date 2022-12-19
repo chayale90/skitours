@@ -10,6 +10,7 @@ const AddLesson = Loadable(lazy(()=>import('../lessons/AddLesson')));
 const EditLesson = Loadable(lazy(()=>import('../lessons/EditLesson')));
 const SkillLevels = Loadable(lazy(()=>import('../lessons/SkillLevels')));
 const Availability = Loadable(lazy(()=>import('../lessons/Availability')));
+const Transfers = Loadable(lazy(()=>import('../transfers/Transfers')));
 const Translations = Loadable(lazy(()=>import('../translations/Translations')));
 
 const dashboardRoutes = [
@@ -21,6 +22,7 @@ const dashboardRoutes = [
   { path: '/admin/lessons/edit/:id', element: <EditLesson/>, auth: authRoles.admin },
   { path: '/admin/lessons/skill-levels', element: <SkillLevels/>, auth: authRoles.admin },
   { path: '/admin/lessons/availability', element: <Availability/>, auth: authRoles.admin},
+  { path: '/admin/transfers', element: <Transfers/>, auth: authRoles.admin },
   { path: '/admin/translations', element: <Translations/>, auth: authRoles.admin},
 ];
 

@@ -304,11 +304,11 @@ export default function Step4Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6}>
+                    <Col md={8} xs={6} className="btn--others-wrapper">
                         <Button className="btn--save py-3 px-5 d-none d-md-inline-block"><FormattedMessage id="btn_save_text"/></Button>
                         <Button className="btn--add py-3 px-3" onClick={handleLessonAdd}><FormattedMessage id="step4_add_lesson_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
-                    <Col md={4} xs={6} style={{'textAlign': 'right'}}>
+                    <Col md={4} xs={6} className="btn--next-wrapper">
                         <Button className="btn--next py-3 px-5" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>

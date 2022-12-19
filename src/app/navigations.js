@@ -8,6 +8,15 @@ export const navigations = [
     ]
   },
   {
+    name: 'Transfers',
+    icon: 'local_taxi',
+    children: [
+      {
+        name:"All", iconText: 'AL', path: '/admin/transfers'
+      }
+    ]
+  },
+  {
     name: 'Lessons',
     icon: 'castforeducation',
     children: [

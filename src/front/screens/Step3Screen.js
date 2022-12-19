@@ -167,7 +167,7 @@ export default function Step3Screen(){
                             <Row className="align-items-end">
                                 <Col md={5} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                <Form.Label><img src="/images/calander.png" style={{'marginRight':'5px'}}/><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
+                                <Form.Label><img src="/images/calander.png" className="field-title-icon" /><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
                                 <div className="btn-group d-flex" data-toggle="buttons">
                                     <label className={equipment.age_type.value === 'child' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="child" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'child'} />
@@ -220,11 +220,11 @@ export default function Step3Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6}>
+                    <Col md={8} xs={6} className="btn--others-wrapper">
                         <Button className="btn--save py-3 px-5 d-none d-md-inline-block"><FormattedMessage id="btn_save_text"/></Button>
                         <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
-                    <Col md={4} xs={6} style={{'textAlign': 'right'}}>
+                    <Col md={4} xs={6} className="btn--next-wrapper">
                         <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>

@@ -127,6 +127,11 @@ color: #FFFFFF;
   color: #2B4159;
 }
 
+html[dir="rtl"] .floating-btn{
+  left: 1.5rem;
+  right: unset;
+}
+
 .floating-btn:active{
   background-color: #ffffff !important;
   color: #2B4159 !important;
@@ -134,6 +139,15 @@ color: #FFFFFF;
 
 .floating-btn i{
   fill: #2B4159;
+}
+
+.field-title-icon{
+  margin-right: 5px;
+}
+
+html[dir="rtl"] .field-title-icon{
+  margin-right: 0;
+  margin-left: 5px;
 }
 
 .input-field-custom input,
@@ -214,6 +228,10 @@ color: #FFFFFF;
   left: calc(66% + 8px);
 }
 
+html[dir="rtl"] .time-icon{
+  left: calc(30% - 8px);
+}
+
 .btn-group {
   background: #FDFDFD;
   border: 1px solid #E0E0E0;
@@ -284,6 +302,23 @@ color: #FFFFFF;
   color: #2B4159;
 }
 
+.btn--others-wrapper > button{
+  margin-right: 2rem;
+}
+
+html[dir="rtl"] .btn--others-wrapper > button{
+  margin-right: 0;
+  margin-left: 2rem;
+}
+
+.btn--next-wrapper{
+  text-align: right;
+}
+
+html[dir="rtl"] .btn--next-wrapper{
+  text-align: left;
+}
+
 .btn--next{
   background: #5CC3D2;
   border-radius: 6px;
@@ -295,6 +330,10 @@ color: #FFFFFF;
   line-height: 26px;
   border:none;
   color: #FFFFFF;
+}
+
+html[dir="rtl"] .btn--next{
+  direction: ltr;
 }
 
 .btn--check{
@@ -376,6 +415,11 @@ input.date_picker {
   padding-right: 18px;
 }
 
+html[dir="rtl"] input.date_picker {
+  background-position: 4% 50%;
+  padding-left: 18px;
+}
+
 .react-datepicker-ingroup .react-datepicker-wrapper{
   position: relative;
   flex: 1 1 auto;
@@ -387,6 +431,26 @@ input.date_picker {
 .react-datepicker-ingroup .date_picker{
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.react-datepicker-ingroup select.time-picker{
+  border-top-right-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  flex-basis: 35%;
+}
+
+html[dir="rtl"] .react-datepicker-ingroup select.time-picker{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  border-top-left-radius: 12px !important;
+  border-bottom-left-radius: 12px !important;
+}
+
+html[dir="rtl"] .react-datepicker-ingroup .date_picker{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .input-field-custom .form-select.is-invalid:not([multiple]):not([size]){

@@ -1,7 +1,5 @@
 import { Box, styled} from '@mui/material';
 import { Breadcrumb } from "app/components";
-import Vehicles from './shared/Vehicles';
-import Airports from './shared/Airports';
 import Helments from './shared/Helments';
 import Equipments from './shared/Equipments';
 import LessonTypes from './shared/LessonType';
@@ -23,8 +21,6 @@ const Assets = () => {
         <Breadcrumb routeSegments={[{ name: "Storefront", path: "/admin/storefront" }, { name: "Assets" }]} />
       </Box>
 
-      <Vehicles/>
-      <Airports/>
       <Helments/>
       <Equipments/>
       <LessonTypes/>
