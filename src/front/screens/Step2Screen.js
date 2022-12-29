@@ -53,11 +53,12 @@ const reducer = function(state,action){
 export default function Step2Screen(){
     const intl = useIntl();
     const navigate = useNavigate();
-    const {arrivalDate,departureDate,addStepTwo,vehicles,airports,arrivals,departures,templateTransfers,changeStepVisited} = useApp()
+    const {arrivalDate,departureDate,addStepTwo,vehicles,arrivals,departures,templateTransfers,changeStepVisited,language} = useApp()
     const [state, dispatch] = useReducer(reducer,{
         arrivals: [],
-        departures: []
+        departures: [],
     });
+    const [airports,setAirports] = useState([]);
 
     const timeSlots = [
         '11:00','11:15','11:30','11:45','12:00','12:15','12:30','12:45','13:00','13:15','13:30','13:45','14:00','14:15','14:30','14:45',
@@ -150,6 +151,17 @@ export default function Step2Screen(){
     }
 
     useEffect(async ()=>{
+        if(vehicles){
+            let items = vehicles.map((item)=>{
+                return item.destination
+            })
+            items = Array.from(new Set(items));
+            setAirports(items);
+            console.log("Airports",items,vehicles);
+        }
+    },[vehicles]);
+
+    useEffect(async ()=>{
         dispatch({type:"SET_ARRIVALS",payload:arrivals});
         dispatch({type:"SET_DEPARTURES",payload:departures});
     },[]);
@@ -176,7 +188,8 @@ export default function Step2Screen(){
                                                 <InputGroup className="input-field-custom">
                                                     <DatePicker
                                                         className={arrival.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
-                                                        dateFormat="EEEE d MMMM yyyy"  
+                                                        dateFormat="EEEE d MMMM yyyy"
+                                                        locale={language.locale}
                                                         minDate={new Date()}
                                                         placeholderText={intl.formatMessage({id:"step2_arrival_date_placeholder"})}
                                                         onChange={(date)=>handleDateChange(date,i,"arr")}
@@ -199,7 +212,7 @@ export default function Step2Screen(){
                                                 <Form.Select aria-label="Skipass" className="py-3" name="airport" value={arrival.airport.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                     <option value="" disabled>{intl.formatMessage({id:"step2_select_city_placeholder"})}</option>
                                                     {airports.length > 0 && airports.map((item,i)=>{
-                                                        return <option key={item.id} value={item.name}>{item.name}</option>
+                                                        return <option key={i} value={item}>{item}</option>
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>
@@ -279,6 +292,7 @@ export default function Step2Screen(){
                                                         className={departure.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
                                                         dateFormat="EEEE d MMMM yyyy"  
                                                         minDate={new Date()}
+                                                        locale={language.locale}
                                                         placeholderText={intl.formatMessage({id:"step2_departure_date_placeholder"})}
                                                         onChange={(date)=>handleDateChange(date,i,"dept")}
                                                         selected={departure.date.value}
@@ -299,8 +313,8 @@ export default function Step2Screen(){
                                                 <Form.Label><img src="/images/flight.png" className="field-title-icon" /><FormattedMessage id="step2_airport_flight_number_heading" /></Form.Label>
                                                 <Form.Select aria-label="Skipass" className="py-3" name="airport" value={departure.airport.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                     <option value="" disabled>{intl.formatMessage({id:"step2_select_city_placeholder"})}</option>
-                                                    {airports.map((item,i)=>{
-                                                        return <option key={item.id} value={item.name}>{item.name}</option>
+                                                    {airports.length > 0 && airports.map((item,i)=>{
+                                                        return <option key={i} value={item}>{item}</option>
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>

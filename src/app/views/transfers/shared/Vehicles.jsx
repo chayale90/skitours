@@ -23,11 +23,12 @@ export default function Vehicles() {
   });
   const [open,setOpen] = useState(false);
   const [name,setName] = useState('');
+  const [destination,setDestination] = useState('');
   const [price,setPrice] = useState(0.00);
-  const [minPassengers, setMinPassengers] = useState(1);
-  const [maxPassengers, setMaxPassengers] = useState(3);
+  const [minPassengers, setMinPassengers] = useState(0);
+  const [maxPassengers, setMaxPassengers] = useState(0);
   const [minChilds, setMinChilds] = useState(0);
-  const [maxChilds, setMaxChilds] = useState(2);
+  const [maxChilds, setMaxChilds] = useState(0);
 
   function handleClose() {
     setOpen(false);
@@ -41,12 +42,14 @@ export default function Vehicles() {
       minPassengers:minPassengers.toString(),
       maxPassengers:maxPassengers.toString(),
       minChilds:minChilds.toString(),
-      maxChilds:maxChilds.toString()
+      maxChilds:maxChilds.toString(),
+      destination: destination
     }
-    axios.post('/admin/storefront/add-vehicle',{
+    axios.post('/admin/transfers/add-vehicle',{
       data
     }).then(data=>{
       setVehicles({...vehicles,data: data.data.vehicles,message:data.data.message, isLoading:false, error: false});
+      setName('');setDestination('');setPrice(0.00);setMinPassengers(0);setMaxPassengers(0);setMinChilds(0);setMaxChilds(0);
       setOpen(false);
     }).catch(err=>{
       setVehicles({...vehicles, message:err.message, isLoading:false, error: true});
@@ -55,7 +58,7 @@ export default function Vehicles() {
   }
 
   const hanldeRemoveVehicle = function(id){
-    axios.post('/admin/storefront/remove-vehicle',{
+    axios.post('/admin/transfers/remove-vehicle',{
       data:id
     }).then(data=>{
       setVehicles({...vehicles,data: data.data.vehicles,message:data.data.message, isLoading:false, error: false});
@@ -67,7 +70,7 @@ export default function Vehicles() {
   }
 
   useEffect(()=>{
-    axios.get('/admin/storefront/get-vehicles').then((data)=>{
+    axios.get('/admin/transfers/get-vehicles').then((data)=>{
       setVehicles({...vehicles,data: data.data.vehicles, isLoading:false,error:false});
     }).catch(err=>{
       setVehicles({...vehicles,message:err.message, isLoading:false,error:true});
@@ -158,6 +161,20 @@ export default function Vehicles() {
                 type="number"
                 value={maxChilds}
                 onChange={(e)=>setMaxChilds(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item sm={12}>
+              <TextField
+                required
+                margin="dense"
+                id="destination"
+                label="Destination"
+                type="text"
+                value={destination}
+                onChange={(e)=>setDestination(e.target.value)}
                 fullWidth
               />
             </Grid>

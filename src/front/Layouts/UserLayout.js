@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../index.css';
 import '../frontend.css';
+import {registerLocale} from 'react-datepicker';
+import {enUS,he} from 'date-fns/locale'
 import "react-datepicker/dist/react-datepicker.css";
 import Header from 'front/components/Header';
 import { Helmet } from 'react-helmet';
@@ -10,6 +12,9 @@ import {IntlProvider} from 'react-intl';
 import useApp from '../hooks/useApp';
 
 import {LOCALES} from '../../translations/locales';
+
+registerLocale('en-US',enUS);
+registerLocale('he-IL',he);
 
 function UserLayout() {
   const {language,translations} = useApp();

@@ -13,7 +13,7 @@ import {
   const StyledTable = styled(Table)(({ theme }) => ({
     whiteSpace: "pre",
     "& thead": {
-      "& tr": { "& th": { paddingLeft: 0, paddingRight: 0 } },
+      "& tr": { "& th": { paddingLeft: 0, paddingRight: 0, textTransform: "capitalize" } },
     },
     "& tbody": {
       "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
@@ -28,7 +28,7 @@ import {
       onRemoveHandler(id);
     }
     return (
-      <Box width="100%" overflow="auto">
+      <Box width="100%" overflow="auto" style={{padding:'1rem'}}>
         <StyledTable>
           <TableHead>
             <TableRow>

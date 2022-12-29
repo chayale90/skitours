@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Steps from "../components/Steps";
+import useApp from "front/hooks/useApp";
+import { useIntl } from "react-intl";
 
 export default function Step5Screen(){
+    const {fullName,target,arrivalDate,departureDate,arrivals,departures} = useApp();
 
+
+    useEffect(()=>{
+        arrivals.forEach((arrival)=>{
+            console.log("Arrival",arrival.date.value,arrival.time.value);
+        })
+    },[])
+
+    const Intl = useIntl();
     return (<div className="container-sm">
         <Steps step5/>
         <div className="my-4 my-md-2 d-flex justify-content-center">
@@ -18,31 +29,45 @@ export default function Step5Screen(){
                         <Row>
                             <Col md={3} sm={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Control type="text" className="py-3" placeholder="Full Name" readOnly/>
+                                    <Form.Control type="text" className="py-3" value={fullName} placeholder="Full Name" readOnly/>
                                 </Form.Group>
                             </Col>
                             <Col md={3} sm={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Control type="text" className="py-3" placeholder="Target" readOnly/>
+                                    <Form.Control type="text" className="py-3" value={target} placeholder="Target" readOnly/>
                                 </Form.Group>
                             </Col>
                             <Col md={3} sm={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Control type="text" className="py-3" placeholder="Check-in date" readOnly/>
+                                    <Form.Control type="text" className="py-3" 
+                                        value={Intl.formatDate(arrivalDate,{
+                                            year: 'numeric',
+                                            weekday: 'short',
+                                            month:'long',
+                                            day: '2-digit'
+                                        })} 
+                                        placeholder="Check-in date" readOnly/>
                                 </Form.Group>
                             </Col>
                             <Col md={3} sm={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Control type="text" className="py-3" placeholder="Check-out date" readOnly/>
+                                    <Form.Control type="text" className="py-3" value={Intl.formatDate(departureDate,{
+                                            year: 'numeric',
+                                            weekday: 'short',
+                                            month:'long',
+                                            day: '2-digit'
+                                        })}  placeholder="Check-out date" readOnly/>
                                 </Form.Group>
                             </Col>
                         </Row>
                         
+                        {(departures[0].vehicle?.value != '' || arrivals[0]?.vehicle.value != '') &&
                         <Row>
                             <Col md={12}>
                                 <Card className="main--card p-3">
                                     <Card.Title className="card--title">Transfers</Card.Title>
-                                    <Card.Subtitle className="card--subtitle" style={{'marginTop': '1rem'}}>Arrival</Card.Subtitle>
+                                    { arrivals[0].vehicle.value &&
+                                    (<><Card.Subtitle className="card--subtitle" style={{'marginTop': '1rem'}}>Arrival</Card.Subtitle>
                                     <div className="overflow-auto">
                                     <Table striped bordered hover className="my-3">
                                     <thead>
@@ -51,23 +76,30 @@ export default function Step5Screen(){
                                         <th>hour</th>
                                         <th>Vehicle Type</th>
                                         <th>Number of people</th>
-                                        <th>Highchair</th>
+                                        <th>Number of Childs</th>
                                         <th>Price</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        <td>22/02/2022</td>
-                                        <td>16:00</td>
-                                        <td>Minibus 8-18</td>
-                                        <td>12</td>
-                                        <td>Yes</td>
-                                        <td>850 NIS</td>
-                                        </tr>
+                                        {arrivals.map((arrival)=>{
+                                            return(<tr>
+                                                <td>{Intl.formatDate(arrival.date?.value,{
+                                                    year: 'numeric',
+                                                    weekday: 'short',
+                                                    month:'long',
+                                                    day: '2-digit'
+                                                })}</td>
+                                                <td>{arrival.time?.value}</td>
+                                                <td>{arrival.vehicle?.value?.name}</td>
+                                                <td>{arrival.number_of_people?.value}</td>
+                                                <td>{arrival.number_of_child?.value}</td>
+                                                <td>EUR {arrival.vehicle?.value?.price}</td>
+                                            </tr>)
+                                        })}
                                     </tbody>
                                     </Table>
-                                    </div>
-                                    <Card.Subtitle className="card--subtitle" style={{'marginTop': '1rem'}}>Departure</Card.Subtitle>
+                                    </div></>)}
+                                    {departures[0].vehicle.value && (<><Card.Subtitle className="card--subtitle" style={{'marginTop': '1rem'}}>Departure</Card.Subtitle>
                                     <div className="overflow-auto">
                                     <Table striped bordered hover className="my-3">
                                     <thead>
@@ -76,27 +108,34 @@ export default function Step5Screen(){
                                         <th>hour</th>
                                         <th>Vehicle Type</th>
                                         <th>Number of people</th>
-                                        <th>Highchair</th>
+                                        <th>Number of childs</th>
                                         <th>Price</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        <td>22/02/2022</td>
-                                        <td>16:00</td>
-                                        <td>Minibus 8-18</td>
-                                        <td>12</td>
-                                        <td>Yes</td>
-                                        <td>850 NIS</td>
-                                        </tr>
+                                        {departures.map((departure)=>{
+                                            return(<tr>
+                                                <td>{Intl.formatDate(departure.date?.value,{
+                                                    year: 'numeric',
+                                                    weekday: 'short',
+                                                    month:'long',
+                                                    day: '2-digit'
+                                                })}</td>
+                                                <td>{departure.time?.value}</td>
+                                                <td>{departure.vehicle?.value?.name}</td>
+                                                <td>{departure.number_of_people?.value}</td>
+                                                <td>{departure.number_of_child?.value}</td>
+                                                <td>EUR {departure.vehicle?.value?.price}</td>
+                                            </tr>)
+                                        })}
                                     </tbody>
                                     </Table>
-                                    </div>
+                                    </div></>)}
                                 </Card>
                             </Col>
                             <Col md={5} sm={12}>
                             </Col>                            
-                        </Row>
+                        </Row>}
                     </Form>
                 </div>
             </div>

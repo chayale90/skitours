@@ -102,7 +102,6 @@ const initialState = {
   templateEquipments,
   templateLessons,
   vehicles: [],
-  airports: [],
   equipmentTypes: [],
   helmets: [],
   fullName: '',
@@ -129,7 +128,7 @@ const reducer = (state, action) => {
     switch (action.type) {
       case 'INIT':
         return {
-          ...state,airports:action.payload.assets.airports,
+          ...state,
           helmets:action.payload.assets.helmets,
           equipmentTypes:action.payload.assets.equipments,
           lessonsData:action.payload.assets.lessons,

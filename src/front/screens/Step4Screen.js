@@ -256,7 +256,7 @@ export default function Step4Screen(){
                                         <Form.Group className="input-field-custom my-3">
                                         {inner_index === 0 && <Form.Label>Training date</Form.Label>}
                                         <div className="d-flex align-items-center">
-                                        <Form.Check  type="checkbox" onChange={(e)=>{handleDateCheck(e,i,date.date)}} style={{'marginRight': '1rem'}} checked={date.isSelected}/>
+                                        <Form.Check  type="checkbox" onChange={(e)=>{handleDateCheck(e,i,date.date)}} className="checkbox-field-custom" checked={date.isSelected}/>
                                         <Form.Control className={date.isSelected ? 'py-3 active date_picker' : 'py-3 date_picker'} disabled={!date.isSelected} type="text" style={{cursor:'auto'}} readOnly placeholder={Intl.formatDate(date.date,{
                                             year: 'numeric',
                                             weekday: 'short',

@@ -33,7 +33,7 @@ export default function Airports() {
     const data = {
       name
     }
-    axios.post('/admin/storefront/add-airport',{
+    axios.post('/admin/transfers/add-airport',{
       data
     }).then(data=>{
       setAirports({...airports,data: data.data.airports,message:data.data.message, isLoading:false, error: false});
@@ -45,7 +45,7 @@ export default function Airports() {
   }
 
   const hanldeRemove = function(id){
-    axios.post('/admin/storefront/remove-airport',{
+    axios.post('/admin/transfers/remove-airport',{
       data:id
     }).then(data=>{
       setAirports({...airports,data: data.data.airports,message:data.data.message, isLoading:false, error: false});
@@ -57,7 +57,7 @@ export default function Airports() {
   }
 
   useEffect(()=>{
-    axios.get('/admin/storefront/get-airports').then((data)=>{
+    axios.get('/admin/transfers/get-airports').then((data)=>{
       setAirports({...airports,data: data.data.airports, isLoading:false,error:false});
     }).catch(err=>{
       setAirports({...airports,message:err.message, isLoading:false,error:true});

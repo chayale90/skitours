@@ -166,6 +166,10 @@ html[dir="rtl"] .field-title-icon{
   border-radius: 12px;
 }
 
+html[dir="rtl"] .input-field-custom select{
+    padding: .375rem .75rem .375rem 2.25rem;
+}
+
 .input-field-custom input:disabled,
 .input-field-custom select:disabled{
   color: #D0D0D0;
@@ -332,8 +336,17 @@ html[dir="rtl"] .btn--next-wrapper{
   color: #FFFFFF;
 }
 
-html[dir="rtl"] .btn--next{
-  direction: ltr;
+html[dir="rtl"] .btn--next svg{
+  transform: rotateZ(180deg);
+}
+
+.checkbox-field-custom{
+  margin-right: 1rem;
+}
+
+html[dir="rtl"] .checkbox-field-custom{
+  margin-left: 1rem;
+  margin-right: 0;
 }
 
 .btn--check{
@@ -412,12 +425,14 @@ input.date_picker {
   background-image: url("./images/calander.png");
   background-position: 96% 50%;
   background-repeat: no-repeat;
-  padding-right: 18px;
+  padding-right: 36px;
+  text-overflow: ellipsis;
 }
 
 html[dir="rtl"] input.date_picker {
   background-position: 4% 50%;
-  padding-left: 18px;
+  padding-right: 18px;
+  padding-left: 36px;
 }
 
 .react-datepicker-ingroup .react-datepicker-wrapper{

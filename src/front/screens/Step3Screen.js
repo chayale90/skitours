@@ -36,7 +36,7 @@ const reducer = function(state,action){
 export default function Step3Screen(){
     const navigate = useNavigate();
     const intl = useIntl();
-    const {equipments,templateEquipments,addStepThree,helmets,equipmentTypes,changeStepVisited} = useApp();
+    const {equipments,templateEquipments,addStepThree,helmets,equipmentTypes,changeStepVisited,language} = useApp();
     const [state, dispatch] = useReducer(reducer,{
         equipments:[]
     });
@@ -139,6 +139,7 @@ export default function Step3Screen(){
                                                     className={equipment.first_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
                                                     dateFormat="EEEE d MMMM yyyy"  
                                                     minDate={new Date()}
+                                                    locale={language.locale}
                                                     placeholderText={intl.formatMessage({id:"step3_hire_date_first_placeholder"})}
                                                     name="first_date"
                                                     onChange={(date)=>handleDateChange(date,i,'first_date')}
@@ -153,6 +154,7 @@ export default function Step3Screen(){
                                                     className={equipment.last_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
                                                     dateFormat="EEEE d MMMM yyyy"  
                                                     minDate={new Date()}
+                                                    locale={language.locale}
                                                     placeholderText={intl.formatMessage({id:"step3_hire_date_last_placeholder"})}
                                                     name="last_date"
                                                     onChange={(date)=>handleDateChange(date,i,'last_date')}

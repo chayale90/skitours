@@ -33,7 +33,7 @@ const reducer = function(state,action){
 export default function Step1Screen(){
     const navigate = useNavigate();
     const Intl = useIntl();
-    const {addStepOne,fullName,target,departureDate,arrivalDate,changeStepVisited} = useApp();
+    const {addStepOne,fullName,target,departureDate,arrivalDate,changeStepVisited,language} = useApp();
 
     const [state, dispatch] = useReducer(reducer,{
         fullName: {
@@ -59,9 +59,7 @@ export default function Step1Screen(){
         let a = new Date(date).getTime();
         if(state.deptDate.value){
             let b = new Date(state.deptDate.value).getTime();
-            console.log("a>>",a,"b>>",b);
             if(b < a){
-                console.log("is greater than");
                 dispatch({type:"DEPTDATE_SAVE",payload:date});
             }
 
@@ -140,6 +138,7 @@ export default function Step1Screen(){
                                     onChange={ handleArrDateChange }  
                                     dateFormat="EEEE d MMMM yyyy"  
                                     minDate={new Date()}
+                                    locale={language.locale}
                                     placeholderText={Intl.formatMessage({id:'step1_arrival_date_placeholder'})}
                                     selected={state.arrDate.value}
                                 />
@@ -150,7 +149,8 @@ export default function Step1Screen(){
                                 <DatePicker
                                     className={state.deptDate.isValid ? 'py-3 date_picker form-control' : 'py-3 is-invalid date_picker form-control'}
                                     onChange={ (date) => dispatch({type:"DEPTDATE_SAVE",payload:date})}  
-                                    dateFormat="EEEE d MMMM yyyy"  
+                                    dateFormat="EEEE d MMMM yyyy"
+                                    locale={language.locale}
                                     minDate={state.arrDate.value ? state.arrDate.value : new Date()}
                                     placeholderText={Intl.formatMessage({id:'step1_departure_date_placeholder'})}
                                     selected={state.deptDate.value}
@@ -165,7 +165,7 @@ export default function Step1Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={12} style={{'textAlign': 'right'}}>
+                    <Col md={12} className="btn--next-wrapper">
                         <Link to="/step2">
                         <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                         </Link>
