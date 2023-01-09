@@ -4,7 +4,8 @@ export const navigations = [
     name: 'Storefront', 
     icon: 'web',
     children: [
-      { name: 'Assets', iconText: 'SI', path: '/admin/storefront' }
+      { name: 'Assets', iconText: 'SI', path: '/admin/storefront' },
+      { name: 'Targets', iconText: 'TA', path: '/admin/storefront/targets' }
     ]
   },
   {
@@ -13,6 +14,15 @@ export const navigations = [
     children: [
       {
         name:"All", iconText: 'AL', path: '/admin/transfers'
+      }
+    ]
+  },
+  {
+    name: "Equipments",
+    icon: 'construction',
+    children: [
+      {
+        name: "All", iconText: "AL", path: '/admin/equipments'
       }
     ]
   },

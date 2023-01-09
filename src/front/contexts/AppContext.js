@@ -29,7 +29,7 @@ const templateTransfers = {
   number_of_child: {
       value: ''
   },
-  message: {
+  hotel: {
       value: ''
   }
 };
@@ -54,6 +54,17 @@ const templateEquipments = {
   helmet: {
       value: "",
       isValid: true
+  },
+  skipass: {
+    value: false
+  },
+  skipass_first_date: {
+    value: "",
+    isValid: true
+  },
+  skipass_last_date: {
+    value: "",
+    isValid: true
   },
   age_type: {
       value: "child",
@@ -106,6 +117,7 @@ const initialState = {
   helmets: [],
   fullName: '',
   target: '',
+  cities: [],
   arrivalDate: null,
   departureDate: null,
   arrivals: [],
@@ -129,6 +141,7 @@ const reducer = (state, action) => {
       case 'INIT':
         return {
           ...state,
+          cities: action.payload.assets.cities,
           helmets:action.payload.assets.helmets,
           equipmentTypes:action.payload.assets.equipments,
           lessonsData:action.payload.assets.lessons,
@@ -159,6 +172,14 @@ const reducer = (state, action) => {
         const lessons = state.lessons.map((lesson)=>{
           return {...lesson,dates:[...action.payload.lessonDates]};
         })
+        const equipments = state.equipments.map((equipment)=>{
+          return {...equipment,
+            first_date:{...equipment.first_date,value:action.payload.arrDate},
+            last_date:{...equipment.last_date,value:action.payload.deptDate},
+            skipass_first_date:{...equipment.skipass_first_date,value:action.payload.arrDate},
+            skipass_last_date:{...equipment.skipass_last_date,value:action.payload.deptDate}
+          }
+        })
         return {
           ...state, fullName: action.payload.fullName, 
           arrivalDate: action.payload.arrDate, 
@@ -166,6 +187,7 @@ const reducer = (state, action) => {
           target: action.payload.target,
           arrivals: arrs,
           departures:depts,
+          equipments,
           templateLessons: {...state.templateLessons,dates: action.payload.lessonDates},
           lessons
         };
@@ -264,6 +286,7 @@ export const AppProvider = ({ children }) => {
             try {
                     const response = await axios.get('/api/assets')
                     const { assets } = response.data
+                    console.log("Cities",assets.cities);
                     console.log("LessonsData",assets.lessons);
                     const transResponse = await axios.get('/api/translations');
                     const {translations} = transResponse.data;

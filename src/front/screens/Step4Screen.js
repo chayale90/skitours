@@ -4,6 +4,7 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Steps from "../components/Steps";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import { FormattedMessage, useIntl } from "react-intl";
 import { getPeopleArray } from "front/utils";
 import Swal from 'sweetalert2';
@@ -141,6 +142,11 @@ export default function Step4Screen(){
         console.log("Lessons>>",state.lessons);
     }
 
+    function handleBackStep(e){
+        e.preventDefault();
+        navigate('/step3');
+    }
+
     useEffect(()=>{
         dispatch({type:"SET_PEOPLE",payload:getPeopleArray(lessonsData)});
         dispatch({type:"SET_LESSONS",payload:lessons});
@@ -153,7 +159,10 @@ export default function Step4Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1><FormattedMessage id="step4_desc_title"/></h1>
                     <p><FormattedMessage id="step4_desc_text"/></p>
-                    <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/> <i className="fa fa-info-circle mx-1"></i></Button>
+                    <div className="floating-btns">
+                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/><i className="fa fa-info-circle mx-1"></i></Button>                    
+                    </div>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.lessons.map((lesson,i)=>{
@@ -309,7 +318,8 @@ export default function Step4Screen(){
                         <Button className="btn--add py-3 px-3" onClick={handleLessonAdd}><FormattedMessage id="step4_add_lesson_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--next py-3 px-5" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-3 px-3" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

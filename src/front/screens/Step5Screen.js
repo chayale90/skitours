@@ -2,17 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Steps from "../components/Steps";
 import useApp from "front/hooks/useApp";
-import { useIntl } from "react-intl";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
+import { FormattedMessage, useIntl } from "react-intl";
+import { useNavigate } from "react-router-dom";
 
 export default function Step5Screen(){
     const {fullName,target,arrivalDate,departureDate,arrivals,departures} = useApp();
-
+    const navigate = useNavigate();
 
     useEffect(()=>{
         arrivals.forEach((arrival)=>{
             console.log("Arrival",arrival.date.value,arrival.time.value);
         })
     },[])
+
+    function handleBackStep(e){
+        e.preventDefault();
+        navigate('/step4');
+    }
 
     const Intl = useIntl();
     return (<div className="container-sm">
@@ -22,7 +30,10 @@ export default function Step5Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1>Order summary</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
-                    <Button className="floating-btn">Download and print <i className="fa fa-info-circle mx-1"></i></Button>
+                    <div className="floating-btns">
+                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn">Download and print <i className="fa fa-info-circle mx-1"></i></Button>                   
+                    </div>
                 </div>
                 <div className="py-md-4 px-md-5">
                     <Form>
@@ -147,7 +158,8 @@ export default function Step5Screen(){
                         <Button className="btn--save py-3 px-5 d-none d-md-inline-block">Save</Button>
                     </Col>
                     <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--next py-3 px-5">Next step <i className="fa fa-chevron-right"></i></Button>
+                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-3 px-3"><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

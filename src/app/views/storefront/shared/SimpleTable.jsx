@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useEffect } from "react";
 
 const StyledTable = styled(Table)(({ theme }) => ({
   whiteSpace: "pre",
@@ -27,6 +28,9 @@ const SimpleTable = ({items, onRemoveHandler}) => {
   const handleRemove = function(id){
     onRemoveHandler(id);
   }
+  useEffect(()=>{
+    console.log("Items",items);
+  },[])
   return (
     <Box width="100%" overflow="auto">
       <StyledTable>

@@ -5,7 +5,11 @@ import Steps from "../components/Steps";
 import DatePicker from 'react-datepicker';
 import useApp from "front/hooks/useApp";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import { FormattedMessage,useIntl } from "react-intl";
+import { Checkbox, FormControlLabel, Typography } from "@mui/material";
+import { getDateArray } from "front/utils";
+import Swal from "sweetalert2";
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -50,11 +54,17 @@ export default function Step3Screen(){
 
     function handleFieldChange(e,index){
         let  data = e.target.value;
+        console.log("Values",data);
         if(e.target.name === 'helmet'){
-            data = helmets.find((h)=>h.id == e.target.value);
+            if(e.target.value !== 'no' && e.target.value !== 'free-child'){
+                data = equipmentTypes.find((h)=>h.id == e.target.value);
+            }
         }
         if(e.target.name === 'equipment_type'){
             data = equipmentTypes.find((eq)=>eq.id == e.target.value);
+        }
+        if(e.target.name === 'skipass'){
+            data = e.target.checked
         }
         dispatch({type:"SAVE_FIELD", payload:{index, value:data,field:e.target.name}});
     }
@@ -68,9 +78,8 @@ export default function Step3Screen(){
         navigate('/step4');
     }
 
-    function handleNext(e){
-        e.preventDefault();
-        let isValid = false;
+    function validateFields(){
+        let isValid = true;
         state.equipments.forEach((item,index)=>{
             let nameIsValid = item.name.value ? true : false;  
             dispatch({type:"SET_ISVALID", payload:{index, value:nameIsValid,field:"name"}});
@@ -81,6 +90,12 @@ export default function Step3Screen(){
             let lastDateIsValid = item.last_date.value ? true : false;
             dispatch({type:"SET_ISVALID", payload:{index, value:lastDateIsValid,field:"last_date"}});
 
+            let skipassFirstDateIsValid = item.skipass.value ? (item.skipass_first_date.value ? true : false) : true;
+            dispatch({type:"SET_ISVALID", payload:{index, value:skipassFirstDateIsValid,field:"skipass_first_date"}});
+
+            let skipassLastDateIsValid = item.skipass.value ? (item.skipass_last_date.value ? true : false) : true;
+            dispatch({type:"SET_ISVALID", payload:{index, value:skipassLastDateIsValid,field:"skipass_last_date"}});
+
             let equipmentTypeIsValid = item.equipment_type.value ? true : false;
             dispatch({type:"SET_ISVALID", payload:{index, value:equipmentTypeIsValid,field:"equipment_type"}});
 
@@ -90,8 +105,31 @@ export default function Step3Screen(){
             let ageTypeIsValid = item.age_type.value ? true : false;
             dispatch({type:"SET_ISVALID", payload:{index, value:ageTypeIsValid,field:"age_type"}});
 
-            if(nameIsValid && firstDateIsValid && lastDateIsValid && equipmentTypeIsValid && helmetIsValid && ageTypeIsValid) isValid = true;
+            if(!nameIsValid || !firstDateIsValid || !lastDateIsValid || !equipmentTypeIsValid || !helmetIsValid || !ageTypeIsValid || !skipassFirstDateIsValid || !skipassLastDateIsValid) isValid = false;
         });
+        return isValid;
+    }
+
+    function handleSaveEquipment(e){
+        e.preventDefault();
+        const isValid = validateFields();
+        if(!isValid) {
+            alert("Please fill in all required fields");
+            return;
+        }
+        Swal.fire({
+            icon:'success',
+            iconColor: '#2B4159',
+            title: 'Saved!',
+            text: "Form is saved",
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#2B4159',
+        })
+    }
+
+    function handleNext(e){
+        e.preventDefault();
+        const isValid = validateFields();
         if(!isValid) {
             alert("Please fill in all required fields");
             return;
@@ -101,9 +139,13 @@ export default function Step3Screen(){
         changeStepVisited('step4');
     }
 
+    function handleBackStep(e){
+        e.preventDefault();
+        navigate('/step2');
+    }
+
     useEffect(()=>{
         dispatch({type:"SET_EQUIPMENTS",payload:equipments});
-        console.log("equipments",equipments);
     },[]);
     return (<div className="container-sm">
         <Steps step3/>
@@ -112,7 +154,10 @@ export default function Step3Screen(){
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
                     <h1><FormattedMessage id="step3_desc_title"/></h1>
                     <p><FormattedMessage id="step3_desc_text"/></p>
-                    <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/> <i className="fa fa-info-circle mx-1"></i></Button>
+                    <div className="floating-btns">
+                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/><i className="fa fa-info-circle mx-1"></i></Button>                    
+                    </div>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.equipments.map((equipment,i)=>{
@@ -194,6 +239,7 @@ export default function Step3Screen(){
                                     name="equipment_type" onChange={(e)=>handleFieldChange(e,i)}>
                                         <option>{intl.formatMessage({id:"step3_select_equipment_placeholder"})}</option>
                                         {equipmentTypes.map((e)=>{
+                                            if(e.age_type !== equipment.age_type.value || e.equipment_type == 'helmet' || e.equipment_type == 'skipass') return;
                                             return <option key={e.id} value={e.id}>{e.name}</option>
                                         })}
                                     </Form.Select>
@@ -206,13 +252,62 @@ export default function Step3Screen(){
                                     value={equipment.helmet.value.id}
                                     className={equipment.helmet.isValid ? "py-3" : "py-3 is-invalid"}>
                                         <option value="" hidden>{intl.formatMessage({id:"step3_helmet_placeholder"})}</option>
-                                        {helmets.map((h)=>{
+                                        {equipmentTypes.map((h)=>{
+                                            if(h.equipment_type !== 'helmet') return;
                                             return <option key={h.id} value={h.id}>{h.name}</option>
                                         })}
+                                        <option value="no">No - helmet</option>
+                                        <option value="free-child">Free child helmet</option>
                                     </Form.Select>
                                 </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Row className="align-items-end">
+                                <Col md={12} sm={12}>
+                                    <Form.Group className="input-field-custom my-3">
+                                    <div className="d-flex align-items-center">
+                                        <label className="custom-label">Skipass</label>
+                                        <Form.Check label="Need a skipass?" type="checkbox" checked={equipment.skipass.value} name="skipass" onChange={(e)=>handleFieldChange(e,i)} className="checkbox-field-custom"/>
+                                    </div>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            {equipment.skipass.value && <Row>
+                                        <Col md={6} sm={12}>
+                                            <Form.Group controlId="date" className="input-field-custom my-3">
+                                                <Form.Label className="d-md-none">Date</Form.Label>
+                                                <DatePicker
+                                                    className={equipment.skipass_first_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
+                                                    dateFormat="EEEE d MMMM yyyy" 
+                                                    minDate={new Date()}
+                                                    locale={language.locale}
+                                                    placeholderText={intl.formatMessage({id:"step3_hire_date_first_placeholder"})}
+                                                    name="skipass_first_date"
+                                                    onChange={(date)=>handleDateChange(date,i,'skipass_first_date')}
+                                                    selected={equipment.skipass_first_date.value}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6} sm={12}>
+                                            <Form.Group controlId="toDate" className="input-field-custom my-3">
+                                                <Form.Label className="d-md-none">To Date</Form.Label>
+                                                <DatePicker
+                                                    className={equipment.skipass_last_date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
+                                                    dateFormat="EEEE d MMMM yyyy"  
+                                                    locale={language.locale}
+                                                    minDate={equipment.skipass_first_date.value ? equipment.skipass_first_date.value : new Date()}
+                                                    placeholderText={intl.formatMessage({id:"step3_hire_date_last_placeholder"})}
+                                                    name="skipass_last_date"
+                                                    onChange={(date)=>handleDateChange(date,i,'skipass_last_date')}
+                                                    selected={equipment.skipass_last_date.value}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        {equipment.skipass_first_date.value && equipment.skipass_last_date.value && <Col md={12} sm={12}>
+                                            <Typography style={{color:'#D0D0D0'}}>{'You selected skipass for ' + (getDateArray(equipment.skipass_first_date.value,equipment.skipass_last_date.value).length - 1) + ' days.'}</Typography>
+                                        </Col>}
+                            </Row>}
                         </Form>
                         )
                     })}
@@ -223,11 +318,12 @@ export default function Step3Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={8} xs={6} className="btn--others-wrapper">
-                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block"><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
                         <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-3 px-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

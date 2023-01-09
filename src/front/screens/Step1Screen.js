@@ -32,6 +32,7 @@ const reducer = function(state,action){
 
 export default function Step1Screen(){
     const navigate = useNavigate();
+    const {cities} = useApp();
     const Intl = useIntl();
     const {addStepOne,fullName,target,departureDate,arrivalDate,changeStepVisited,language} = useApp();
 
@@ -99,9 +100,7 @@ export default function Step1Screen(){
             navigate('/step2');
             changeStepVisited('step2');
         }
-
     }
-
 
     return (<div className="container-sm">
         <Steps step1/>
@@ -124,7 +123,12 @@ export default function Step1Screen(){
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
                                     <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} /><FormattedMessage id="step1_target_title"/></Form.Label>
-                                    <Form.Control className={state.target.isValid ? 'py-3' : 'py-3 is-invalid'} value={state.target.value} type="text" placeholder={Intl.formatMessage({id:'step1_target_Placeholder'})} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}/>
+                                    <Form.Select aria-label="Cities" className={state.target.isValid ? 'py-3' : 'py-3 is-invalid'} name="cities" value={state.target.value} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}>
+                                        <option value="" disabled selected>{Intl.formatMessage({id:'step1_target_Placeholder'})}</option>
+                                        {cities?.map((city)=>{
+                                            return <option key={city.id} value={city.id}>{Intl.formatMessage({id:"city."+city.name,defaultMessage:city?.name})}</option>
+                                        })}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -166,9 +170,7 @@ export default function Step1Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={12} className="btn--next-wrapper">
-                        <Link to="/step2">
                         <Button className="btn--next py-3 px-5" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/> <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
-                        </Link>
                     </Col>
                 </Row>
             </div>
