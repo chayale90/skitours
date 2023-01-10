@@ -78,11 +78,11 @@ const templateLessons = {
     isValid: true
   },
   number_of_people: {
-    value: 'One',
+    value: '',
     isValid: true
   },
   skill_level: {
-    value: '',
+    value: '0',
     isValid: true
   },
   name: {
@@ -125,6 +125,8 @@ const initialState = {
   equipments: [],
   lessonsData: [],
   lessons:[],
+  skilllevels: [],
+  availabilities: [],
   translations: {},
   language: {
     locale: 'he-IL',
@@ -139,19 +141,27 @@ const initialState = {
 const reducer = (state, action) => {
     switch (action.type) {
       case 'INIT':
+        let locale = "he-IL";
+        if(localStorage.getItem('locale')){
+          locale = localStorage.getItem('locale');
+        }
         return {
           ...state,
           cities: action.payload.assets.cities,
           helmets:action.payload.assets.helmets,
           equipmentTypes:action.payload.assets.equipments,
           lessonsData:action.payload.assets.lessons,
+          skilllevels: action.payload.assets.skilllevels,
+          availabilities: action.payload.assets.availabilities,
           vehicles:action.payload.assets.vehicles,isInitialised:true,
           arrivals:[state.templateTransfers],departures:[state.templateTransfers],
           equipments:[state.templateEquipments],
           lessons:[state.templateLessons],
-          translations: action.payload.translations
+          translations: action.payload.translations,
+          language: {...state.language, locale}
         }
       case 'CHANGE_LOCALE':
+        localStorage.setItem('locale',action.payload);
         return {...state, language: {...state.language, locale: action.payload}};
       case 'CHANGE_STEP_VISITED':
         const steps = state.steps.map((step)=>{
@@ -202,6 +212,11 @@ const reducer = (state, action) => {
           ...state,
           equipments: action.payload.equipments
         }
+      case "SAVE_STEP_4":
+        return {
+          ...state,
+          lessons: action.payload.lessons
+        }
       default: {
           return { ...state }
       }
@@ -213,6 +228,7 @@ const AppContext = createContext({
     addStepOne: () => Promise.resolve(),
     addStepTwo: () => Promise.resolve(),
     addStepThree: () => Promise.resolve(),
+    addStepFour: () => Promise.resolve(),
     changeStepVisited: () => {},
     changeLocale: () => {}
 })
@@ -239,11 +255,12 @@ export const AppProvider = ({ children }) => {
       //Set dates for Lessons
       var lessonDates = [];
       const dates = getDateArray(data.arrDate,data.deptDate);
+      const availabilities = state?.availabilities?.filter((availability)=>{return availability.hours === 2})
       if(dates){
         dates.forEach((date)=>{
           lessonDates.push({
             date : date,
-            time: '09:00 - 11:00',
+            time: availabilities[0]?.timing,
             hours: '2',
             isSelected: false
           })
@@ -280,14 +297,27 @@ export const AppProvider = ({ children }) => {
       })
     }
 
+    const addStepFour = async (data) => {
+      dispatch({
+        type: "SAVE_STEP_4",
+        payload: {
+          lessons: data.lessons
+        }
+      })
+    }
+
     useEffect(() => {
         ; (async () => {
-            document.dir = "rtl";
+            let locale = 'he-IL';
+            if(localStorage.getItem('locale')) locale = localStorage.getItem('locale');
+            if(locale === 'he-IL'){
+              document.dir = "rtl";
+            }else{
+              document.dir = "ltr";
+            }
             try {
                     const response = await axios.get('/api/assets')
                     const { assets } = response.data
-                    console.log("Cities",assets.cities);
-                    console.log("LessonsData",assets.lessons);
                     const transResponse = await axios.get('/api/translations');
                     const {translations} = transResponse.data;
                     dispatch({
@@ -312,6 +342,7 @@ export const AppProvider = ({ children }) => {
                 addStepOne,
                 addStepTwo,
                 addStepThree,
+                addStepFour,
                 changeStepVisited,
                 changeLocale
             }}

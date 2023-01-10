@@ -24,12 +24,16 @@ const reducer = function(state,action){
             });
             return {...state,lessons};
         }
-        case 'SET_DATE_HOUR': {
+        case 'SET_DATE_TIME_HOUR': {
             let lessons = state.lessons.map((lesson,i)=>{
                 if(action.payload.index === i){
                     let dates = lesson.dates.map((date)=>{
                         if(new Date(date.date).getTime() === new Date(action.payload.date).getTime()){
-                            return {...date, hours: action.payload.value};
+                            if(action.payload.type === 'hour'){
+                                return {...date, hours: action.payload.value};
+                            }else if(action.payload.type === 'time'){
+                                return {...date, time: action.payload.value};
+                            }
                         }else{
                             return date;
                         }
@@ -41,6 +45,7 @@ const reducer = function(state,action){
             })
             return {...state,lessons};
         }
+
         case "SET_DATE_CHECK": {
             let lessons = state.lessons.map((lesson,i)=>{
                 if(action.payload.index === i){
@@ -75,7 +80,7 @@ const reducer = function(state,action){
 export default function Step4Screen(){
     const navigate = useNavigate();
     const Intl = useIntl();
-    const {templateLessons,lessons,lessonsData,arrivalDate,departureDate,changeStepVisited} = useApp();
+    const {templateLessons,lessons,lessonsData,skilllevels,availabilities,arrivalDate,departureDate,changeStepVisited,addStepFour} = useApp();
     const [state,dispatch] = useReducer(reducer,{
         lessons:[],
         people:[]
@@ -88,11 +93,24 @@ export default function Step4Screen(){
 
     function handleFieldChange(e,index){
         let  data = e.target.value;
+        if(e.target.name === 'lesson_type'){
+            dispatch({type: "SAVE_FIELD", payload:{index,value:"0",field:"skill_level"}});
+        }
         dispatch({type:"SAVE_FIELD", payload:{index, value:data,field:e.target.name}});
     }
 
-    function handleHourChange(value,index,date){
-        dispatch({type:"SET_DATE_HOUR", payload:{index,value,date}});
+    function handleHourChange(value,index,date,type){
+        if(type === 'hour'){
+            let filteredAvailabilites = [];
+            if(value === '2'){
+                filteredAvailabilites = availabilities?.filter((availability)=>availability.hours === 2);
+            }else if(value === '4'){
+                filteredAvailabilites = availabilities?.filter((availability)=>availability.hours === 4);
+            }
+            console.log("FilteredAvailabilities",filteredAvailabilites,availabilities)
+            dispatch({type: "SET_DATE_TIME_HOUR", payload: {index,value:filteredAvailabilites[0]?.timing,date,type:'time'}})
+        }
+        dispatch({type:"SET_DATE_TIME_HOUR", payload:{index,value,date,type}});
     }
 
     function handleSkipStep(){
@@ -138,8 +156,44 @@ export default function Step4Screen(){
         
     }
 
+    function validateFields(){
+        let isValid = true;
+        state.lessons.forEach((item,index)=>{
+            let datesValid = true;
+            const selectedDates = item.dates?.filter((date)=>{return date.isSelected})
+            if(selectedDates.length === 0){
+                datesValid = false;
+                alert("Please pick atleast one date for lessons");
+            }
+            let nameIsValid = item.name.value ? true : false;  
+            dispatch({type:"SET_ISVALID", payload:{index, value:nameIsValid,field:"name"}});
+
+            let numberOfPeopleIsValid = item.number_of_people.value ? true : false
+            dispatch({type: "SET_ISVALID", payload:{index, value:numberOfPeopleIsValid, field:"number_of_people"}});
+
+            let skillLevelIsValid = item.skill_level.value != '0' ? true : false
+            dispatch({type: "SET_ISVALID", payload:{index, value:skillLevelIsValid, field: "skill_level"}});
+
+            // let ageTypeIsValid = item.age_type.value ? true : false;
+            // dispatch({type:"SET_ISVALID", payload:{index, value:ageTypeIsValid,field:"age_type"}});
+
+            if(!datesValid || !nameIsValid || !numberOfPeopleIsValid || !skillLevelIsValid) isValid = false;
+        });
+        return isValid;
+    }
+
     function handleNextStep(){
-        console.log("Lessons>>",state.lessons);
+        const isValid = validateFields();
+        if(!isValid) {
+            alert("Please fill in all required fields");
+            return;
+        }
+        let lessons = state.lessons.map((lesson)=>{
+            return {isAdded:true,...lesson}
+        })
+        addStepFour({lessons})
+        navigate('/step5');
+        changeStepVisited('step5');
     }
 
     function handleBackStep(e){
@@ -166,6 +220,7 @@ export default function Step4Screen(){
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.lessons.map((lesson,i)=>{
+                        console.log("Lesson",state.lessons);
                         return (
                         <>
                         <Form key={i}>
@@ -176,13 +231,13 @@ export default function Step4Screen(){
                                             <Form.Group className="input-field-custom my-3">
                                             <Form.Label><FormattedMessage id="step4_training_type_title"/></Form.Label>
                                                 <div className="btn-group d-flex" data-toggle="buttons">
-                                                    <label className={lesson.training_type.value === 'group' ? 'btn active p-3' : 'btn p-3'}>
-                                                        <input onClick={(e)=>{handleFieldChange(e,i)}} type="radio" value="group" name="training_type" id="option2" autoComplete="off" chacked={lesson.training_type.value === 'group'} />
-                                                        <FormattedMessage id="step4_training_type_option_1"/>
-                                                    </label>
                                                     <label className={lesson.training_type.value === 'private' ? 'btn active p-3' : 'btn p-3'}>
                                                         <input onClick={(e)=>{handleFieldChange(e,i)}} type="radio" value="private" name="training_type" id="option2" autoComplete="off" chacked={lesson.training_type.value === 'private'}/>
                                                         <FormattedMessage id="step4_training_type_option_2"/>
+                                                    </label>
+                                                    <label className={lesson.training_type.value === 'group' ? 'btn active p-3' : 'btn p-3'}>
+                                                        <input onClick={(e)=>{handleFieldChange(e,i)}} type="radio" value="group" name="training_type" id="option2" autoComplete="off" chacked={lesson.training_type.value === 'group'} />
+                                                        <FormattedMessage id="step4_training_type_option_1"/>
                                                     </label>
                                                 </div>
                                             </Form.Group>
@@ -191,6 +246,7 @@ export default function Step4Screen(){
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Label><FormattedMessage id="step4_number_people_title"/></Form.Label>
                                                 <Form.Select aria-label="Skipass" name="number_of_people" onChange={(e) => {handleFieldChange(e,i)}} value={lesson.number_of_people.value} defaultValue={state.people[0]} className="py-3" disabled={lesson.training_type.value === 'group'}>
+                                                    <option selected disabled hidden>Number of People</option>
                                                     {state.people.map((item,i)=>{
                                                         return <option key={i} value={item}>{item}</option>
                                                     })}
@@ -202,14 +258,18 @@ export default function Step4Screen(){
                                 <Col md={5} sm={12}>
                                     <Form.Group className="input-field-custom my-3">
                                         <Form.Label><FormattedMessage id="step4_browsing_level_title"/></Form.Label>
-                                        <Form.Select aria-label="Skipass" name="skill_level" onChange={(e) => {handleFieldChange(e,i)}} className="py-3">
+                                        <Form.Select aria-label="Skipass" name="skill_level" value={lesson.skill_level.value} onChange={(e) => {handleFieldChange(e,i)}} className={lesson.skill_level.isValid ? 'py-3' : 'py-3 is-invalid'}>
                                             <option value="0" selected disabled hidden>{Intl.formatMessage({id:'step4_browsing_level_placeholder'})}</option>
-                                            <option style={{fontSize:'20px',fontWeight:'bold'}} disabled>Skiing</option>
-                                            <option value="1">Surfing level 1 - I didn't surf</option>
-                                            <option value="2">One</option>
-                                            <option style={{fontSize:'20px',fontWeight:'bold'}} disabled>Snwoboarding</option>
-                                            <option value="3">two</option>
-                                            <option value="4">three</option>
+                                            <option style={{fontSize:'20px',fontWeight:'bold',color:"#2B4159"}} disabled>Skiing</option>
+                                            {skilllevels.map((skilllevel)=>{
+                                                if(skilllevel.type != 'skiing') return;
+                                                return <option key={skilllevel.id} value={skilllevel.name} disabled={lesson.lesson_type.value != 'ski'} >{skilllevel.name}</option>
+                                            })}
+                                            <option style={{fontSize:'20px',fontWeight:'bold',color:"#2B4159"}} disabled>Snowboarding</option>
+                                            {skilllevels.map((skilllevel)=>{
+                                                if(skilllevel.type != 'snowboarding') return;
+                                                return <option key={skilllevel.id} value={skilllevel.name} disabled={lesson.lesson_type.value != 'snowboarding'} >{skilllevel.name}</option>
+                                            })}
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
@@ -221,7 +281,7 @@ export default function Step4Screen(){
                                         <Col md={5} sm={12}>
                                             <Form.Group controlId="date" className="input-field-custom my-3">
                                                 <Form.Label><FormattedMessage id="step4_full_name_title"/></Form.Label>
-                                                <Form.Control className="py-3" type="text" name="name" onChange={(e) => {handleFieldChange(e,i)}} placeholder={Intl.formatMessage({id:"step4_full_name_placeholder"})}/>
+                                                <Form.Control className={lesson.name.isValid ? 'py-3' : 'py-3 is-invalid'} value={lesson.name.value} type="text" name="name" onChange={(e) => {handleFieldChange(e,i)}} placeholder={Intl.formatMessage({id:"step4_full_name_placeholder"})}/>
                                             </Form.Group>
                                         </Col>
                                         <Col md={7} sm={12}>
@@ -234,7 +294,7 @@ export default function Step4Screen(){
                                                     </label>
                                                     <label className={lesson.lesson_type.value === 'snowboarding' ? 'btn active p-3' : 'btn p-3'}>
                                                         <input onClick={(e)=>{handleFieldChange(e,i)}} type="radio" value="snowboarding" name="lesson_type" id="option2" autoComplete="off" chacked={lesson.lesson_type.value === 'snowboarding'}  />
-                                                        <FormattedMessage id="step4_lesson_type_option_1"/>
+                                                        <FormattedMessage id="step4_lesson_type_option_2"/>
                                                     </label>
                                                 </div>
                                             </Form.Group>
@@ -279,12 +339,12 @@ export default function Step4Screen(){
                                         <Row>
                                             <Col md={6} xs={6}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                                    <Button className={date.isSelected ? (date.hours == '2' ? 'btn--check py-3 px-3 w-100 active' : 'btn--check py-3 px-3 w-100') : 'btn--check py-3 px-3 w-100'} disabled={!date.isSelected} onClick={(e)=>handleHourChange('2',i,date.date)}>Two-hour lesson</Button>
+                                                    <Button className={date.isSelected ? (date.hours == '2' ? 'btn--check py-3 px-3 w-100 active' : 'btn--check py-3 px-3 w-100') : 'btn--check py-3 px-3 w-100'} disabled={!date.isSelected} onClick={(e)=>handleHourChange('2',i,date.date,'hour')}>Two-hour lesson</Button>
                                                 </Form.Group>
                                             </Col>
                                             <Col md={6} xs={6}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                                    <Button className={date.isSelected ? (date.hours == '4' ? 'btn--check py-3 px-3 w-100 active' : 'btn--check py-3 px-3 w-100') : 'btn--check py-3 px-3 w-100'} disabled={!date.isSelected} onClick={(e)=>handleHourChange('4',i,date.date)}>Four-hour lesson</Button>
+                                                    <Button className={date.isSelected ? (date.hours == '4' ? 'btn--check py-3 px-3 w-100 active' : 'btn--check py-3 px-3 w-100') : 'btn--check py-3 px-3 w-100'} disabled={!date.isSelected} onClick={(e)=>handleHourChange('4',i,date.date, 'hour')}>Four-hour lesson</Button>
                                                 </Form.Group>
         
                                             </Col>
@@ -292,9 +352,14 @@ export default function Step4Screen(){
                                     </Col>
                                     <Col md={2} sm={12}>
                                     <Form.Group className="input-field-custom my-3">
-                                        <Form.Select aria-label="Skipass" disabled={!date.isSelected} className={date.isSelected ? 'py-3 active' : 'py-3'}>
-                                            <option>09:00 - 11:00</option>
-                                            <option value="1">11:00 - 13-00</option>
+                                        <Form.Select aria-label="Skipass" value={date.time} disabled={!date.isSelected} className={date.isSelected ? 'py-3 active' : 'py-3'} onChange={(e)=>handleHourChange(e.target.value,i,date.date,'time')}>
+                                            {availabilities?.map((availability)=>{
+                                                if(availability.hours == date.hours){
+                                                    return <option key={availability.id} value={availability.timing}>{availability.timing}</option>
+                                                }else{
+                                                    return;
+                                                }
+                                            })}
                                         </Form.Select>
                                     </Form.Group>
                                     </Col>

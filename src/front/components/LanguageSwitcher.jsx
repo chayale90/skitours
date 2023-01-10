@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FormGroup,FormControlLabel,styled } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import useApp from 'app/hooks/useApp';
+import { useState } from 'react';
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -67,22 +68,34 @@ const IOSSwitch = styled((props) => (
 
 function LanguageSwitcher() {
 
+  const [isChecked,setIsChecked] = useState(false);
   const {changeLocale} = useApp();
 
   const onSwatchChange = function(e){
     if(e.target.checked){
       changeLocale('en-US');
+      setIsChecked(true);
       document.dir = 'ltr';
     }else{
       changeLocale('he-IL');
+      setIsChecked(false);
       document.dir = 'rtl';
     }
   }
+
+  useEffect(()=>{
+    if(localStorage.getItem('locale')){
+      if(localStorage.getItem('locale') === 'en-US'){
+        setIsChecked(true);
+      }
+    }
+  },[])
 
   return (
     <FormGroup>
         <FormControlLabel
           onChange={(e)=>onSwatchChange(e)}
+          checked={isChecked}
           control={<IOSSwitch sx={{ m: 1 }} />}
         />
     </FormGroup>

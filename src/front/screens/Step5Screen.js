@@ -6,16 +6,104 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
+import { getDateArray, getDaysPrice } from "front/utils";
+import { capitalize } from "lodash";
 
 export default function Step5Screen(){
-    const {fullName,target,arrivalDate,departureDate,arrivals,departures} = useApp();
+    const {fullName,target,arrivalDate,departureDate,arrivals,departures,cities,equipments,equipmentTypes,lessons,lessonsData} = useApp();
     const navigate = useNavigate();
 
     useEffect(()=>{
+        console.log("Lessons",lessons)
         arrivals.forEach((arrival)=>{
             console.log("Arrival",arrival.date.value,arrival.time.value);
         })
     },[])
+
+    function getTargetCity(target){
+        let targetCity = cities?.filter((city)=>{
+            return city.id == target
+        })
+        return targetCity[0]?.name
+    }
+
+    function getLessonData(lesson){
+        let selectedLesson = lessonsData?.filter((item)=>{
+            return (item.name == lesson.number_of_people.value && item.lesson_type == lesson.training_type.value)
+        })
+        selectedLesson = selectedLesson[0];
+        let days = lesson.dates.filter((item)=>item.isSelected);
+        console.log("days",days);
+        const lessonsPrice = getDaysPrice(days.length,selectedLesson?.days);
+        return days.length +' day(s) '+ capitalize(lesson.training_type.value)+' lessons ' +'<br/>€ '+ lessonsPrice;
+    }
+
+    function getLessonTotalPrice(lesson){
+        let selectedLesson = lessonsData?.filter((item)=>{
+            if(lesson.training_type.value == 'group'){
+                return (item.lesson_type == lesson.training_type.value)
+            }else{
+                return (item.name == lesson.number_of_people.value && item.lesson_type == lesson.training_type.value)
+            }
+        })
+        selectedLesson = selectedLesson[0];
+        let days = lesson.dates.filter((item)=>item.isSelected);
+        const lessonsPrice = getDaysPrice(days.length,selectedLesson?.days);
+        return '€ '+ lessonsPrice;
+    }
+
+    function getEquipmentData(equipment){
+        let helmetPrice = 0;
+        let equipmentPrice = 0;
+        let isHelmetExist = (equipment.helmet?.value !== 'no' && equipment.helmet?.value !== 'free-child') ? true : false;
+        let days = getDateArray(equipment.first_date.value,equipment.last_date.value);
+        if(isHelmetExist){
+            helmetPrice = getDaysPrice(days.length,equipment.helmet?.value?.days);
+        }if(equipment.equipment_type?.value?.days){
+            equipmentPrice = getDaysPrice(days.length, equipment.equipment_type?.value?.days)
+        }
+        return days.length + ' day(s) ' + capitalize(equipment.age_type?.value) 
+            +' '+ equipment?.equipment_type?.value?.name + (isHelmetExist ? '<br/> Helmet: 1' : '<br/>Helmet: 0')
+            + '<br/> € '+ (parseFloat(helmetPrice) + parseFloat(equipmentPrice))
+    }
+
+    function getSkipassData(equipment){
+        if(!equipment.skipass.value) return '';
+        let skipass = equipmentTypes?.filter((type)=>{
+            if(type.equipment_type == 'skipass') return type;
+        })
+        console.log("Skipass",skipass)
+        if(skipass.length === 0) return '';
+        let skipassPrice = 0;
+        let days = getDateArray(equipment.skipass_first_date.value,equipment.skipass_last_date.value);
+        skipassPrice = getDaysPrice((days.length - 1), skipass[0]?.days);
+        return (days.length - 1) + ' day(s) ' + '<br/>€ '+ skipassPrice
+
+    }
+
+    function getEquipmentTotalPrice(equipment){
+        let helmetPrice = 0;
+        let equipmentPrice = 0;
+        let skipassPrice = 0;
+        let isHelmetExist = (equipment.helmet?.value !== 'no' && equipment.helmet?.value !== 'free-child') ? true : false;
+        let days = getDateArray(equipment.first_date.value,equipment.last_date.value);
+        if(isHelmetExist){
+            helmetPrice = getDaysPrice(days.length,equipment.helmet?.value?.days);
+        }if(equipment.equipment_type?.value?.days){
+            equipmentPrice = getDaysPrice(days.length, equipment.equipment_type?.value?.days)
+        }
+        if(equipment.skipass.value){
+            let skipass = equipmentTypes?.filter((type)=>{
+                if(type.equipment_type == 'skipass') return type;
+            })
+            if(skipass.length){
+                let skipassDays = getDateArray(equipment.skipass_first_date.value,equipment.skipass_last_date.value);
+                skipassPrice = getDaysPrice((skipassDays.length - 1), skipass[0]?.days);
+            }
+        }
+
+        return '€ ' + (parseFloat(helmetPrice) + parseFloat(equipmentPrice) + parseFloat(skipassPrice))
+    }
 
     function handleBackStep(e){
         e.preventDefault();
@@ -45,7 +133,7 @@ export default function Step5Screen(){
                             </Col>
                             <Col md={3} sm={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                    <Form.Control type="text" className="py-3" value={target} placeholder="Target" readOnly/>
+                                    <Form.Control type="text" className="py-3" value={getTargetCity(target)} placeholder="Target" readOnly/>
                                 </Form.Group>
                             </Col>
                             <Col md={3} sm={12}>
@@ -72,8 +160,8 @@ export default function Step5Screen(){
                             </Col>
                         </Row>
                         
-                        {(departures[0].vehicle?.value != '' || arrivals[0]?.vehicle.value != '') &&
-                        <Row>
+                        {(departures[0].isAdded || arrivals[0]?.isAdded) &&
+                        <Row style={{marginBottom:'2rem'}}>
                             <Col md={12}>
                                 <Card className="main--card p-3">
                                     <Card.Title className="card--title">Transfers</Card.Title>
@@ -142,6 +230,68 @@ export default function Step5Screen(){
                                     </tbody>
                                     </Table>
                                     </div></>)}
+                                </Card>
+                            </Col>
+                            <Col md={5} sm={12}>
+                            </Col>                            
+                        </Row>}
+                        {equipments[0].isAdded && <Row style={{marginBottom:'2rem'}}>
+                            <Col md={12}>
+                                <Card className="main--card p-3">
+                                    <Card.Title className="card--title">Equipments</Card.Title>
+                                    { arrivals[0].vehicle.value &&
+                                    (<>
+                                    <div className="overflow-auto">
+                                    <Table striped bordered hover className="my-3">
+                                    <thead>
+                                        <tr style={{textAlign:'center'}}>
+                                        <th>Name</th>
+                                        <th>Equipment</th>
+                                        <th>Skipass</th>
+                                        <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {equipments.map((equipment)=>{
+                                            return(<tr style={{textAlign:'center'}}>
+                                                <td>{equipment.name?.value}</td>
+                                                <td dangerouslySetInnerHTML={{__html: getEquipmentData(equipment)}} />
+                                                <td dangerouslySetInnerHTML={{__html: getSkipassData(equipment)}}/>
+                                                <td>{getEquipmentTotalPrice(equipment)}</td>
+                                            </tr>)
+                                        })}
+                                    </tbody>
+                                    </Table>
+                                    </div></>)}
+                                </Card>
+                            </Col>
+                            <Col md={5} sm={12}>
+                            </Col>                            
+                        </Row>}
+                        {lessons[0].isAdded && <Row style={{marginBottom:'2rem'}}>
+                            <Col md={12}>
+                                <Card className="main--card p-3">
+                                    <Card.Title className="card--title">Lessons</Card.Title>
+                                    <div className="overflow-auto">
+                                    <Table striped bordered hover className="my-3">
+                                    <thead>
+                                        <tr style={{textAlign:'center'}}>
+                                        <th>Name</th>
+                                        <th>Lessons</th>
+                                        <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {lessons.map((lesson)=>{
+                                            return(<tr style={{textAlign:'center'}}>
+                                                <td>{lesson.name?.value}</td>
+                                                <td dangerouslySetInnerHTML={{__html: getLessonData(lesson)}} />
+                                                <td>{getLessonTotalPrice(lesson)}</td>
+                                            </tr>)
+                                        })}
+                                    </tbody>
+                                    </Table>
+                                    </div>
                                 </Card>
                             </Col>
                             <Col md={5} sm={12}>

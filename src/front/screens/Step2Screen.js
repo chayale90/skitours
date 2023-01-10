@@ -146,7 +146,13 @@ export default function Step2Screen(){
             alert("Please fill in all required fields");
             return;
         }
-        addStepTwo({arrivals: state.arrivals, departures: state.departures})
+        let arrivals = state.arrivals.map((arrival)=>{
+            return {isAdded:true,...arrival};
+        })
+        let departures = state.departures.map((departure)=>{
+            return {isAdded:true, ...departure};
+        })
+        addStepTwo({arrivals, departures})
         navigate('/step3');
         changeStepVisited('step3');
 

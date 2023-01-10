@@ -82,7 +82,7 @@ const Assets = () => {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Storefront", path: "/admin/storefront" }, { name: "Assets" }]} />
+        <Breadcrumb routeSegments={[{ name: "Lessons", path: "/admin/lessons" }, { name: "SkillLevel" }]} />
       </Box>
       <Box>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

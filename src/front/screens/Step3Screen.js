@@ -134,7 +134,10 @@ export default function Step3Screen(){
             alert("Please fill in all required fields");
             return;
         }
-        addStepThree({equipments: state.equipments})
+        let equipments = state.equipments.map((equipment)=>{
+            return {isAdded:true,...equipment}
+        })
+        addStepThree({equipments})
         navigate('/step4');
         changeStepVisited('step4');
     }
