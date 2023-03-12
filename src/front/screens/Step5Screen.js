@@ -4,6 +4,7 @@ import Steps from "../components/Steps";
 import useApp from "front/hooks/useApp";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
+import InfoIcon from '@mui/icons-material/Info';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
 import { getDateArray, getDaysPrice } from "front/utils";
@@ -119,8 +120,8 @@ export default function Step5Screen(){
                     <h1>Order summary</h1>
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
                     <div className="floating-btns">
-                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="floating-btn">Download and print <i className="fa fa-info-circle mx-1"></i></Button>                   
+                        <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn"><InfoIcon/>Download and print</Button>                   
                     </div>
                 </div>
                 <div className="py-md-4 px-md-5">

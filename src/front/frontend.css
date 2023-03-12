@@ -1102,3 +1102,13 @@ html[dir="rtl"] .home-icon:last-child{
     margin-bottom: var(--dl-space-space-unit);
   }
 }
+
+.cancel-btn{
+  fill: red;
+  font-size: 2.2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%,-50%);
+  cursor: pointer;
+}

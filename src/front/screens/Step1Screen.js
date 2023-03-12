@@ -123,7 +123,7 @@ export default function Step1Screen(){
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
                                     <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} /><FormattedMessage id="step1_target_title"/></Form.Label>
-                                    <Form.Select aria-label="Cities" className={state.target.isValid ? 'py-3' : 'py-3 is-invalid'} name="cities" value={state.target.value} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}>
+                                    <Form.Select aria-label="Cities" className={`${!state.target.isValid && 'is-invalid'} py-3 ${!state.target.value && 'empty'}`} name="cities" value={state.target.value} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}>
                                         <option value="" disabled selected>{Intl.formatMessage({id:'step1_target_Placeholder'})}</option>
                                         {cities?.map((city)=>{
                                             return <option key={city.id} value={city.id}>{Intl.formatMessage({id:"city."+city.name,defaultMessage:city?.name})}</option>

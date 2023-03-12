@@ -23,15 +23,15 @@ export default function Steps(props){
         steps.forEach((step)=>{stepsObj[step.title] = step.visited})
         switch (step) {
             case 'step1':
-                return props.step1 ? 'steps active' : (stepsObj[step] ? 'steps visited' : 'steps');
+                return props.step1 ? 'steps active' : (stepsObj[step] ? 'steps' : 'steps');
             case 'step2':
-                return props.step2 ? 'steps active' : (stepsObj[step] ? 'steps visited' : 'steps');
+                return props.step2 ? 'steps active' : (stepsObj[step] ? 'steps' : 'steps');
             case 'step3':
-                return props.step3 ? 'steps active' : (stepsObj[step] ? 'steps visited' : 'steps');
+                return props.step3 ? 'steps active' : (stepsObj[step] ? 'steps' : 'steps');
             case 'step4':
-                return props.step4 ? 'steps active' : (stepsObj[step] ? 'steps visited' : 'steps');
+                return props.step4 ? 'steps active' : (stepsObj[step] ? 'steps' : 'steps');
             case 'step5':
-                return props.step5 ? 'steps active' : (stepsObj[step] ? 'steps visited' : 'steps');
+                return props.step5 ? 'steps active' : (stepsObj[step] ? 'steps' : 'steps');
             default:
                 return 'steps';
         }

@@ -8,6 +8,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import { FormattedMessage,useIntl } from "react-intl";
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 import { getDateArray } from "front/utils";
 import Swal from "sweetalert2";
 
@@ -158,8 +159,8 @@ export default function Step3Screen(){
                     <h1><FormattedMessage id="step3_desc_title"/></h1>
                     <p><FormattedMessage id="step3_desc_text"/></p>
                     <div className="floating-btns">
-                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/><i className="fa fa-info-circle mx-1"></i></Button>                    
+                        <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><InfoIcon/><FormattedMessage id="btn_skip_text"/></Button>                    
                     </div>
                 </div>
                 <div className="py-md-4 px-md-5">
@@ -237,10 +238,10 @@ export default function Step3Screen(){
                                 <Col  md={4} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
                                     <Form.Label className="d-md-none">Skipass</Form.Label>
-                                    <Form.Select aria-label="Skipass" className={equipment.equipment_type.isValid ? "py-3" : "py-3 is-invalid"} 
-                                    value={equipment.equipment_type.value.id}
+                                    <Form.Select aria-label="Skipass" className={`${!equipment.equipment_type.isValid && 'is-invalid'} py-3 ${!equipment.equipment_type?.value?.id && 'empty'}`} 
+                                    value={equipment.equipment_type?.value?.id}
                                     name="equipment_type" onChange={(e)=>handleFieldChange(e,i)}>
-                                        <option>{intl.formatMessage({id:"step3_select_equipment_placeholder"})}</option>
+                                        <option disabled selected={!equipment.equipment_type?.value?.id}>{intl.formatMessage({id:"step3_select_equipment_placeholder"})}</option>
                                         {equipmentTypes.map((e)=>{
                                             if(e.age_type !== equipment.age_type.value || e.equipment_type == 'helmet' || e.equipment_type == 'skipass') return;
                                             return <option key={e.id} value={e.id}>{e.name}</option>
@@ -253,7 +254,7 @@ export default function Step3Screen(){
                                     <Form.Label><FormattedMessage id="step3_helmet_title"/></Form.Label>
                                     <Form.Select aria-label="Skipass" name="helmet" onChange={(e)=>handleFieldChange(e,i)}
                                     value={equipment.helmet.value.id}
-                                    className={equipment.helmet.isValid ? "py-3" : "py-3 is-invalid"}>
+                                    className={`${!equipment.helmet.isValid && 'is-invalid'} py-3 ${!equipment.helmet?.value && 'empty'}`}>
                                         <option value="" hidden>{intl.formatMessage({id:"step3_helmet_placeholder"})}</option>
                                         {equipmentTypes.map((h)=>{
                                             if(h.equipment_type !== 'helmet') return;
@@ -320,13 +321,13 @@ export default function Step3Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6} className="btn--others-wrapper">
-                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
-                        <Button className="btn--add py-3 px-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
+                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
+                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
-                    <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="btn--next py-3 px-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                    <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
+                        <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-2 px-2 py-sm-3 px-sm-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

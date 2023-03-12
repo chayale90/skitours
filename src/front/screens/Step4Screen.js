@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Steps from "../components/Steps";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
+import InfoIcon from '@mui/icons-material/Info';
 import { FormattedMessage, useIntl } from "react-intl";
 import { getPeopleArray } from "front/utils";
 import Swal from 'sweetalert2';
@@ -214,13 +215,12 @@ export default function Step4Screen(){
                     <h1><FormattedMessage id="step4_desc_title"/></h1>
                     <p><FormattedMessage id="step4_desc_text"/></p>
                     <div className="floating-btns">
-                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/><i className="fa fa-info-circle mx-1"></i></Button>                    
+                        <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><InfoIcon/><FormattedMessage id="btn_skip_text"/></Button>                    
                     </div>
                 </div>
                 <div className="py-md-4 px-md-5">
                     {state.lessons.map((lesson,i)=>{
-                        console.log("Lesson",state.lessons);
                         return (
                         <>
                         <Form key={i}>
@@ -245,7 +245,7 @@ export default function Step4Screen(){
                                         <Col md={7} sm={12}>
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Label><FormattedMessage id="step4_number_people_title"/></Form.Label>
-                                                <Form.Select aria-label="Skipass" name="number_of_people" onChange={(e) => {handleFieldChange(e,i)}} value={lesson.number_of_people.value} defaultValue={state.people[0]} className="py-3" disabled={lesson.training_type.value === 'group'}>
+                                                <Form.Select aria-label="Skipass" name="number_of_people" onChange={(e) => {handleFieldChange(e,i)}} value={lesson.number_of_people.value} defaultValue={state.people[0]} className={`py-3 ${!lesson.training_type.value && 'empty'}`} disabled={lesson.training_type.value === 'group'}>
                                                     <option selected disabled hidden>Number of People</option>
                                                     {state.people.map((item,i)=>{
                                                         return <option key={i} value={item}>{item}</option>
@@ -258,7 +258,7 @@ export default function Step4Screen(){
                                 <Col md={5} sm={12}>
                                     <Form.Group className="input-field-custom my-3">
                                         <Form.Label><FormattedMessage id="step4_browsing_level_title"/></Form.Label>
-                                        <Form.Select aria-label="Skipass" name="skill_level" value={lesson.skill_level.value} onChange={(e) => {handleFieldChange(e,i)}} className={lesson.skill_level.isValid ? 'py-3' : 'py-3 is-invalid'}>
+                                        <Form.Select aria-label="Skipass" name="skill_level" value={lesson.skill_level.value} onChange={(e) => {handleFieldChange(e,i)}} className={`${!lesson.skill_level.isValid && 'is-invalid'} py-3 ${lesson.skill_level.value === '0' && 'empty'}`}>
                                             <option value="0" selected disabled hidden>{Intl.formatMessage({id:'step4_browsing_level_placeholder'})}</option>
                                             <option style={{fontSize:'20px',fontWeight:'bold',color:"#2B4159"}} disabled>Skiing</option>
                                             {skilllevels.map((skilllevel)=>{
@@ -378,13 +378,13 @@ export default function Step4Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6} className="btn--others-wrapper">
-                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block"><FormattedMessage id="btn_save_text"/></Button>
-                        <Button className="btn--add py-3 px-3" onClick={handleLessonAdd}><FormattedMessage id="step4_add_lesson_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
+                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
+                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5"><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleLessonAdd}><FormattedMessage id="step4_add_lesson_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
-                    <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="btn--next py-3 px-3" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                    <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
+                        <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-2 px-2 py-sm-3 px-sm-3" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

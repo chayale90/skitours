@@ -6,6 +6,10 @@ import DatePicker from 'react-datepicker';
 import useApp from "front/hooks/useApp";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
+import InfoIcon from '@mui/icons-material/Info';
+import CancelIcon from '@mui/icons-material/Cancel'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AddIcon from '@mui/icons-material/Add';
 import { FormattedMessage, useIntl } from "react-intl";
 import axios from "../../axios.js";
 
@@ -15,10 +19,23 @@ const reducer = function(state,action){
             return  {...state,arrivals:[...state.arrivals, action.payload]};
         case "SET_ARRIVALS":
             return {...state,arrivals:action.payload}
+        case "REMOVE_ARRIVAL":{
+            let currentArrivals = state.arrivals;
+            if (action.payload > -1) {
+                currentArrivals.splice(action.payload, 1);
+            }
+            return {...state,arrivals: currentArrivals}
+        }
         case "ADD_DEPARTURE":
             return  {...state,departures:[...state.departures, action.payload]};
         case "SET_DEPARTURES":
             return {...state,departures:action.payload}
+        case "REMOVE_DEPARTURE":
+            let currentDepartures = state.departures;
+            if (action.payload > -1) {
+                currentDepartures.splice(action.payload, 1);
+            }
+            return {...state,departures:currentDepartures}
         case "SAVE_FIELD":{
             let isValid = action.payload.value != '';
             if(action.payload.type === 'arr'){
@@ -60,6 +77,8 @@ export default function Step2Screen(){
         arrivals: [],
         departures: [],
     });
+    const [arrivalSaved, setArrivalSaved] = useState(false);
+    const [departureSaved, setDepartureSaved] = useState(false);
     const [airports,setAirports] = useState([]);
 
     const timeSlots = [
@@ -104,13 +123,60 @@ export default function Step2Screen(){
         dispatch({type:"SAVE_FIELD", payload:{type,index, value:e.target.value,field:e.target.name}});
     }
 
+    function handleRemoveTransfer(type,i){
+        if(type === 'arrival'){
+            dispatch({type: "REMOVE_ARRIVAL", payload: i});
+        }else if(type === 'departure'){
+            dispatch({type: "REMOVE_DEPARTURE", payload: i});
+        }
+    }
+
     function handleSkipStep(){
         changeStepVisited('step3');
         navigate('/step3');
     }
 
-    function handleNext(e){
-        e.preventDefault();
+    function validateArrival(){
+        let isValid = true;
+        state.arrivals.forEach((item,index)=>{
+            let dateIsValid = item.date.value ? true : false;  
+            dispatch({type:"SET_ISVALID", payload:{type:"arr",index, value:dateIsValid,field:"date"}});
+
+            let timeIsValid = item.time.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"arr",index, value:timeIsValid,field:"time"}});
+
+            let vehicleIsValid = item.vehicle.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"arr",index, value:vehicleIsValid,field:"vehicle"}});
+
+            let peopleIsValid = item.number_of_people.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"arr",index, value:peopleIsValid,field:"number_of_people"}});
+
+            if(item.date.value == '' || item.date.value == null || item.time.value == '' || item.time.value == null || item.vehicle.value == '' || item.vehicle.value == null || item.number_of_people.value == '' || item.number_of_people.value == null) isValid = false;
+        });
+        return isValid;
+    }
+
+    function validateDeparture(){
+        let isValid = true;
+        state.departures.forEach((item,index)=>{
+            let dateIsValid = item.date.value ? true : false;  
+            dispatch({type:"SET_ISVALID", payload:{type:"dept",index, value:dateIsValid,field:"date"}});
+
+            let timeIsValid = item.time.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"dept",index, value:timeIsValid,field:"time"}});
+
+            let vehicleIsValid = item.vehicle.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"dept",index, value:vehicleIsValid,field:"vehicle"}});
+
+            let peopleIsValid = item.number_of_people.value ? true : false;
+            dispatch({type:"SET_ISVALID", payload:{type:"dept",index, value:peopleIsValid,field:"number_of_people"}});
+
+            if(item.date.value == '' || item.date.value == null || item.time.value == '' || item.time.value == null || item.vehicle.value == '' || item.vehicle.value == null || item.number_of_people.value == '' || item.number_of_people.value == null) isValid = false;
+        });
+        return isValid;
+    }
+
+    function validator(){
         let isValid = true;
         state.arrivals.forEach((item,index)=>{
             let dateIsValid = item.date.value ? true : false;  
@@ -142,7 +208,37 @@ export default function Step2Screen(){
 
             if(item.date.value == '' || item.date.value == null || item.time.value == '' || item.time.value == null || item.vehicle.value == '' || item.vehicle.value == null || item.number_of_people.value == '' || item.number_of_people.value == null) isValid = false;
         });
-        if(!isValid) {
+        return isValid;
+    }
+
+    function handleDepartureSave(){
+        if(!validateDeparture()) {
+            alert("Please fill in all required fields");
+            return;
+        }
+        let departures = state.departures.map((departure)=>{
+            return {isAdded:true, ...departure};
+        })
+        addStepTwo({arrivals:null, departures})
+        setDepartureSaved(true);
+    }
+
+    function handleArrivalSave(){
+        if(!validateArrival()) {
+            alert("Please fill in all required fields");
+            return;
+        }
+        let arrivals = state.arrivals.map((arrival)=>{
+            return {isAdded:true,...arrival};
+        })
+        addStepTwo({arrivals, departures: null})
+        setArrivalSaved(true);
+    }
+
+    function handleNext(e){
+        e.preventDefault();
+
+        if(!validator()) {
             alert("Please fill in all required fields");
             return;
         }
@@ -184,20 +280,21 @@ export default function Step2Screen(){
         <div className="my-4 my-md-2 d-flex flex-column align-items-center">
             <div className="form-container-box small-container w-100">
                 <div className="form-text-area py-md-4 px-md-5 position-relative">
-                    <h1><FormattedMessage id="step2_desc_title"/></h1>
-                    <p><FormattedMessage id="step2_desc_text"/></p>
+                    <h1><FormattedMessage id="step2_arrival_desc_title"/></h1>
+                    <p><FormattedMessage id="step2_arrival_desc_text"/></p>
                     <div className="floating-btns">
-                        <Button className="floating-btn--back" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><FormattedMessage id="btn_skip_text"/><i className="fa fa-info-circle mx-1"></i></Button>                    
+                        <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><InfoIcon /><FormattedMessage id="btn_skip_text"/></Button>                    
                     </div>
                 </div>
                 <div className="py-md-4 px-md-5">
                     <Form>
-                        <h1 className="card--title"><FormattedMessage id="step2_arrivals_heading" /></h1>
+                        {/* <h1 className="card--title"><FormattedMessage id="step2_arrivals_heading" /></h1> */}
                         {state.arrivals.map((arrival,i)=>{
                             return (
-                                <div className="transfers" key={i}>
+                                <div className="transfers" style={{position:'relative'}} key={i}>
                                     {i > 0 && <hr/>}
+                                    {i > 0 && <CancelIcon className="cancel-btn" onClick={(e)=>handleRemoveTransfer('arrival',i)}/>}
                                 <Row>
                                     <Col md={5} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
@@ -212,7 +309,7 @@ export default function Step2Screen(){
                                                         onChange={(date)=>handleDateChange(date,i,"arr")}
                                                         selected={arrival.date.value}
                                                     />
-                                                    <Form.Select aria-label="Time" name='time' className={arrival.time.isValid ? "py-3 text-center time-picker" : "py-3 text-center is-invalid time-picker"} onChange={(e)=>handleFieldChange(e,i,"arr")} value={arrival.time.value}  >
+                                                    <Form.Select aria-label="Time" name='time' className={`${!arrival.time.isValid && 'is-invalid'} py-3 text-center time-picker ${!arrival.time.value && 'empty'}`} onChange={(e)=>handleFieldChange(e,i,"arr")} value={arrival.time.value}  >
                                                         {timeSlots.map((slot,i)=>{
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
@@ -223,10 +320,10 @@ export default function Step2Screen(){
                                     </Col>
                                     <Col md={7} sm={12}>
                                         <Row className="align-items-end">
-                                          <Col md={4} sm={12}>
+                                          <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3" style={{'whiteSpace':'nowrap'}}>
                                                 <Form.Label><img src="/images/flight.png" className="field-title-icon" /><FormattedMessage id="step2_airport_flight_number_heading" /></Form.Label>
-                                                <Form.Select aria-label="Skipass" className="py-3" name="airport" value={arrival.airport.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
+                                                <Form.Select aria-label="Skipass" className={`py-3 ${!arrival.airport.value && 'empty'}`} name="airport" value={arrival.airport.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                     <option value="" disabled>{intl.formatMessage({id:"step2_select_city_placeholder"})}</option>
                                                     {airports.length > 0 && airports?.map((item,i)=>{
                                                         return <option key={i} value={item?.name}>{intl.formatMessage({id:'airport.'+item?.name,defaultMessage:item?.name})}</option>
@@ -234,38 +331,42 @@ export default function Step2Screen(){
                                                 </Form.Select>
                                             </Form.Group>
                                             </Col>
-                                            <Col md={4} sm={12}>
-                                            <Form.Group className="input-field-custom my-3">
-                                                <Form.Control className="py-3" name="flight_number" type="text" value={arrival.flight_number.value} placeholder={intl.formatMessage({id:"step2_flight_number_placeholder"})} onChange={(e)=>handleFieldChange(e,i,"arr")} />
-                                            </Form.Group>
-                                          </Col>
-                                          <Col md={4} sm={12}>
-                                            <Form.Group className="input-field-custom my-3">
-                                                <Form.Label><FormattedMessage id="step2_hotel_title" /></Form.Label>
-                                                <Form.Control className="py-3" type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={arrival.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"arr")} />
-                                             </Form.Group>
+                                            <Col md={6} sm={12}>
+                                                <Form.Group className="input-field-custom my-3">
+                                                    <Form.Control className="py-3" name="flight_number" type="text" value={arrival.flight_number.value} placeholder={intl.formatMessage({id:"step2_flight_number_placeholder"})} onChange={(e)=>handleFieldChange(e,i,"arr")} />
+                                                </Form.Group>
                                           </Col>
                                         </Row>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6} sm={12}>
+                                        <Row className="align-items-end">
+                                            <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Label><img src="/images/vehicle.png" className="field-title-icon" /><FormattedMessage id="step2_vehicle_type_title"/></Form.Label>
-                                                <Form.Select aria-label="Vehicle" className={arrival.vehicle.isValid ? "py-3" : "py-3 is-invalid"} value={arrival.vehicle.value.id} name="vehicle" onChange={(e)=>handleFieldChange(e,i,"arr")}>
+                                                <Form.Select aria-label="Vehicle" className={`${!arrival.vehicle.isValid && 'is-invalid'} py-3 ${!arrival.vehicle.value.id && 'empty'}`} value={arrival.vehicle.value.id} name="vehicle" onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                     <option value="" hidden disabled>Select Vehicle</option>
                                                     {vehicles.map((item)=>{
                                                         return <option key={item.id} value={item.id}>{item.name}</option>
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>
+                                            </Col>
+                                            <Col md={6} sm={12}>
+                                                <Form.Group className="input-field-custom my-3">
+                                                    <Form.Label><FormattedMessage id="step2_hotel_title" /></Form.Label>
+                                                    <Form.Control className="py-3" type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={arrival.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"arr")} />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                     <Col md={6} sm={12}>
                                         <Row className="align-items-end">
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
                                                     <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" /><FormattedMessage id="step2_number_of_people_title"/></Form.Label>
-                                                    <Form.Select aria-label="Skipass" className={arrival.number_of_people.isValid ? "py-3" : "py-3 is-invalid"} name="number_of_people" value={arrival.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
+                                                    <Form.Select aria-label="Skipass" className={`${!arrival.number_of_people.isValid && 'is-invalid'} py-3 ${!arrival.number_of_people.value && 'empty'}`} name="number_of_people" value={arrival.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                         <option value="" hidden disabled>{intl.formatMessage({id:'step2_number_of_people_placeholder'})}</option>
                                                         {arrival.vehicle.value && setOptions(arrival.vehicle.value.passengers)}
                                                     </Form.Select>
@@ -273,7 +374,7 @@ export default function Step2Screen(){
                                             </Col>
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="complimentary-highchair" className="input-field-custom my-3">
-                                                    <Form.Select aria-label="Skipass" className="py-3" name="number_of_child" value={arrival.number_of_child.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
+                                                    <Form.Select aria-label="Skipass" className={`py-3 ${!arrival.number_of_child.value && 'empty'}`} name="number_of_child" value={arrival.number_of_child.value} onChange={(e)=>handleFieldChange(e,i,"arr")}>
                                                         <option value="" hidden disabled>{intl.formatMessage({id:'step2_number_of_child_placeholder'})}</option>
                                                         {arrival.vehicle.value && setOptions(arrival.vehicle.value.childs)}
                                                     </Form.Select>
@@ -295,17 +396,38 @@ export default function Step2Screen(){
                         })}
                     </Form>
                 </div>
+                <div className="d-flex justify-content-center px-md-5 pb-0 pb-sm-4 mt-3 mt-sm-0">
+                    <div className="my-5 small-container w-100">
+                        <Row>
+                            <Col md={12} xs={12} className="btn--others-wrapper d-flex justify-content-sm-start mb-4">
+                                <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleArrivalAdd}><p><AddIcon/><FormattedMessage id="step2_add_arrival_btn" /></p></Button>
+                                <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5" onClick={handleArrivalSave}><FormattedMessage id="btn_save_text"/></Button>
+                            </Col>
+                            {arrivalSaved && <div className="save--message">
+                                <p><CheckCircleIcon style={{fill:'#5CC3D2'}}/><span><FormattedMessage id="save--message" defaultMessage="הפרטים נשמרו בהצלחה"/></span></p>
+                            </div>}
+                        </Row>
+                    </div>
+                </div>
             </div>
 
-
             <div className="form-container-box small-container w-100" style={{marginTop:"3rem"}}>
+                <div className="form-text-area py-md-4 px-md-5 position-relative">
+                    <h1><FormattedMessage id="step2_departure_desc_title"/></h1>
+                    <p><FormattedMessage id="step2_departure_desc_text"/></p>
+                    <div className="floating-btns">
+                        <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="floating-btn" onClick={()=>handleSkipStep()}><InfoIcon /><FormattedMessage id="btn_skip_text"/></Button>                    
+                    </div>
+                </div>
                 <div className="py-md-4 px-md-5">
                 <Form>
-                    <h1 className="card--title"><FormattedMessage id="step2_departures_heading" /></h1>
+                    {/* <h1 className="card--title"><FormattedMessage id="step2_departures_heading" /></h1> */}
                         {state.departures.map((departure,i)=>{
                             return (
-                                <div className="transfers" key={i}>
+                                <div className="transfers" key={i} style={{position:'relative'}}>
                                     {i > 0 && <hr/>}
+                                    {i > 0 && <CancelIcon className="cancel-btn" onClick={(e)=>handleRemoveTransfer('departure',i)}/>}
                                 <Row>
                                     <Col md={5} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
@@ -320,7 +442,7 @@ export default function Step2Screen(){
                                                         onChange={(date)=>handleDateChange(date,i,"dept")}
                                                         selected={departure.date.value}
                                                     />
-                                                    <Form.Select aria-label="Time" className={departure.time.isValid ? "py-3 text-center time-picker" : "py-3 text-center time-picker is-invalid"} name="time" onChange={(e)=>handleFieldChange(e,i,"dept")} value={departure.time.value} >
+                                                    <Form.Select aria-label="Time" className={`${!departure.time.isValid && 'is-invalid'} py-3 text-center time-picker ${!departure.time.value && 'empty'}`} name="time" onChange={(e)=>handleFieldChange(e,i,"dept")} value={departure.time.value} >
                                                         {timeSlots.map((slot,i)=>{
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
@@ -331,10 +453,10 @@ export default function Step2Screen(){
                                     </Col>
                                     <Col md={7} sm={12}>
                                         <Row className="align-items-end">
-                                          <Col md={4} sm={12}>
+                                          <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3" style={{'whiteSpace':'nowrap'}}>
                                                 <Form.Label><img src="/images/flight.png" className="field-title-icon" /><FormattedMessage id="step2_airport_flight_number_heading" /></Form.Label>
-                                                <Form.Select aria-label="Skipass" className="py-3" name="airport" value={departure.airport.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
+                                                <Form.Select aria-label="Skipass" className={`py-3 ${!departure.airport.value && 'empty'}`} name="airport" value={departure.airport.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                     <option value="" disabled>{intl.formatMessage({id:"step2_select_city_placeholder"})}</option>
                                                     {airports.length > 0 && airports.map((item,i)=>{
                                                         return <option key={i} value={item?.name}>{intl.formatMessage({id:'airport.'+item?.name,defaultMessage:item?.name})}</option>
@@ -342,38 +464,42 @@ export default function Step2Screen(){
                                                 </Form.Select>
                                             </Form.Group>
                                             </Col>
-                                            <Col md={4} sm={12}>
+                                            <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Control className="py-3"  type="text" placeholder={intl.formatMessage({id:"step2_flight_number_placeholder"})} value={departure.flight_number.value} name="flight_number" onChange={(e)=>handleFieldChange(e,i,"dept")} />
                                             </Form.Group>
-                                          </Col>
-                                          <Col md={4} sm={12}>
-                                             <Form.Group className="input-field-custom my-3">
-                                                <Form.Label><FormattedMessage id="step2_hotel_title" /></Form.Label>
-                                                <Form.Control className="py-3" type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={departure.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"dept")} />
-                                             </Form.Group>
                                           </Col>
                                         </Row>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6} sm={12}>
+                                        <Row className="align-items-end">
+                                            <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Label><img src="/images/vehicle.png" className="field-title-icon" /><FormattedMessage id="step2_vehicle_type_title"/></Form.Label>
-                                                <Form.Select aria-label="Vehicle" className={departure.vehicle.isValid ? "py-3" : "py-3 is-invalid"} value={departure.vehicle.value.id} name="vehicle" onChange={(e)=>handleFieldChange(e,i,"dept")}>
+                                                <Form.Select aria-label="Vehicle" className={`${!departure.vehicle.isValid && 'is-invalid'} py-3 ${!departure.vehicle.value.id && 'empty'}`} value={departure.vehicle.value.id} name="vehicle" onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                     <option value="" hidden disabled>Select Vehicle</option>
                                                     {vehicles.map((item)=>{
                                                         return <option key={item.id} value={item.id}>{item.name}</option>
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>
+                                            </Col>
+                                            <Col md={6} sm={12}>
+                                             <Form.Group className="input-field-custom my-3">
+                                                <Form.Label><FormattedMessage id="step2_hotel_title" /></Form.Label>
+                                                <Form.Control className="py-3" type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={departure.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"dept")} />
+                                             </Form.Group>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                     <Col md={6} sm={12}>
                                         <Row className="align-items-end">
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="date" className="input-field-custom my-3">
                                                     <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" /><FormattedMessage id="step2_number_of_people_title"/></Form.Label>
-                                                    <Form.Select aria-label="Skipass" className={departure.number_of_people.isValid ? "py-3" : "py-3 is-invalid"}  name="number_of_people" value={departure.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
+                                                    <Form.Select aria-label="Skipass" className={`${!departure.number_of_people.isValid && 'is-invalid'} py-3 ${!departure.number_of_people.value && 'empty'}`}  name="number_of_people" value={departure.number_of_people.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                         <option value="" hidden disabled>{intl.formatMessage({id:'step2_number_of_people_placeholder'})}</option>
                                                         {departure.vehicle.value && setOptions(departure.vehicle.value.passengers)}
                                                     </Form.Select>
@@ -381,7 +507,7 @@ export default function Step2Screen(){
                                             </Col>
                                             <Col md={6} sm={12}>
                                                 <Form.Group controlId="complimentary-highchair" className="input-field-custom my-3">
-                                                    <Form.Select aria-label="Skipass" className="py-3" name="number_of_child" value={departure.number_of_child.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
+                                                    <Form.Select aria-label="Skipass" className={`py-3 ${!departure.number_of_child.value && 'empty'}`} name="number_of_child" value={departure.number_of_child.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                         <option value="" hidden disabled>{intl.formatMessage({id:'step2_number_of_child_placeholder'})}</option>
                                                         {departure.vehicle.value && setOptions(departure.vehicle.value.childs)}
                                                     </Form.Select>
@@ -408,14 +534,17 @@ export default function Step2Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6} className="btn--others-wrapper">
-                        <Button className="btn--add py-3 px-3" onClick={handleArrivalAdd}><FormattedMessage id="step2_add_arrival_btn" /><i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
-                        <Button className="btn--add py-3 px-3" onClick={handleDepartureAdd}><FormattedMessage id="step2_add_departure_btn" /><i className="fa fa-plus"></i></Button>
+                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
+                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5" onClick={handleDepartureSave}><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleDepartureAdd}><p><AddIcon/><FormattedMessage id="step2_add_departure_btn" /></p></Button>
                     </Col>
-                    <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="btn--next py-3 px-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+                    <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
+                        <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-2 px-2 py-sm-3 px-sm-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
+                    {departureSaved && <div className="save--message">
+                        <p><CheckCircleIcon style={{fill:'#5CC3D2'}}/><span><FormattedMessage id="save--message" defaultMessage="הפרטים נשמרו בהצלחה"/></span></p>
+                    </div>}
                 </Row>
             </div>
         </div>

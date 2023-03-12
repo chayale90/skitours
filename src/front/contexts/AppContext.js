@@ -202,6 +202,11 @@ const reducer = (state, action) => {
           lessons
         };
       case 'SAVE_STEP_2':
+        if(action.payload.arrivals === null){
+          return {...state, departures: action.payload.departures}
+        }else if(action.payload.departures === null){
+          return {...state, arrivals: action.payload.arrivals}
+        }
         return {
             ...state, 
             arrivals: action.payload.arrivals,
