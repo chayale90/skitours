@@ -51,6 +51,7 @@ const getPlusDayPrice = function(days){
 
 export const getDaysPrice = function(total,days){
   console.log("Days",days)
+  if(days === undefined) return 0;
   if(days.length === 0) return 0;
   let price = 0;
   let found = false;

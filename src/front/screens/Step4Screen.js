@@ -205,6 +205,7 @@ export default function Step4Screen(){
             let nameIsValid = item.name.value ? true : false;  
             dispatch({type:"SET_ISVALID", payload:{index, value:nameIsValid,field:"name"}});
 
+            console.log(item.number_of_people.value)
             let numberOfPeopleIsValid = item.number_of_people.value ? true : false
             dispatch({type: "SET_ISVALID", payload:{index, value:numberOfPeopleIsValid, field:"number_of_people"}});
 
@@ -283,8 +284,8 @@ export default function Step4Screen(){
                                         <Col md={7} sm={12}>
                                             <Form.Group className="input-field-custom my-3">
                                                 <Form.Label><FormattedMessage id="step4_number_people_title"/></Form.Label>
-                                                <Form.Select aria-label="Skipass" name="number_of_people" onChange={(e) => {handleFieldChange(e,i)}} value={lesson.number_of_people.value} defaultValue={state.people[0]} className={`py-3 ${!lesson.training_type.value && 'empty'}`} disabled={lesson.training_type.value === 'group'}>
-                                                    <option selected disabled hidden>Number of People</option>
+                                                <Form.Select aria-label="Skipass" name="number_of_people" onChange={(e) => {handleFieldChange(e,i)}} value={lesson.number_of_people.value} className={`py-3 ${!lesson.number_of_people.value && 'empty'} ${!lesson.number_of_people.isValid && 'is-invalid'}`} disabled={lesson.training_type.value === 'group'}>
+                                                    <option value={''} selected disabled hidden>Number of People</option>
                                                     {state.people.map((item,i)=>{
                                                         return <option key={i} value={item}>{item}</option>
                                                     })}
