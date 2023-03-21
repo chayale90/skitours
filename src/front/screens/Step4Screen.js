@@ -6,9 +6,11 @@ import Steps from "../components/Steps";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import InfoIcon from '@mui/icons-material/Info';
+import CancelIcon from "@mui/icons-material/Cancel";
 import { FormattedMessage, useIntl } from "react-intl";
 import { getPeopleArray } from "front/utils";
 import Swal from 'sweetalert2';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const reducer = function(state,action){
     switch (action.type) {
@@ -18,6 +20,13 @@ const reducer = function(state,action){
             return {...state,people:action.payload};
         case "ADD_LESSON":
             return  {...state,lessons:[...state.lessons, action.payload]};
+        case "REMOVE_LESSON":{
+            let currentLessons = state.lessons;
+            if (action.payload > -1) {
+                currentLessons.splice(action.payload, 1);
+            }
+            return { ...state, lessons: currentLessons }
+        }
         case "SAVE_FIELD":{
             let isValid = action.payload.value != '';
             let lessons = state.lessons.map((lesson,i)=>{
@@ -86,10 +95,37 @@ export default function Step4Screen(){
         lessons:[],
         people:[]
     })
+    const [lessonsSaved, setLessonsSaved] = useState(false)
 
     const handleLessonAdd = (e) => {
         e.preventDefault();
         dispatch({type:"ADD_LESSON",payload:templateLessons});
+    }
+
+    const handleLessonSave = (e) => {
+        e.preventDefault();
+        const isValid = validateFields();
+        if(!isValid) {
+            alert("Please fill in all required fields");
+            return;
+        }
+        Swal.fire({
+            icon:'success',
+            iconColor: '#2B4159',
+            title: 'Saved!',
+            text: "Form is saved",
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#2B4159',
+        })
+        let lessons = state.lessons.map((lesson)=>{
+            return {isAdded:true,...lesson}
+        })
+        addStepFour({lessons})
+        setLessonsSaved(true);
+    }
+
+    function handleRemoveLesson(i){
+        dispatch({type: "REMOVE_LESSON", payload: i});
     }
 
     function handleFieldChange(e,index){
@@ -223,7 +259,9 @@ export default function Step4Screen(){
                     {state.lessons.map((lesson,i)=>{
                         return (
                         <>
-                        <Form key={i}>
+                        <Form key={i} style={{position:'relative'}}>
+                            {i != 0 && <hr/>}
+                            {i > 0 && <CancelIcon className="cancel-btn" onClick={(e)=>handleRemoveLesson(i)}/>}
                             <Row>
                                 <Col md={7} sm={12}>
                                     <Row>
@@ -326,7 +364,7 @@ export default function Step4Screen(){
                                         {inner_index === 0 && <Form.Label>Training date</Form.Label>}
                                         <div className="d-flex align-items-center">
                                         <Form.Check  type="checkbox" onChange={(e)=>{handleDateCheck(e,i,date.date)}} className="checkbox-field-custom" checked={date.isSelected}/>
-                                        <Form.Control className={date.isSelected ? 'py-3 active date_picker' : 'py-3 date_picker'} disabled={!date.isSelected} type="text" style={{cursor:'auto'}} readOnly placeholder={Intl.formatDate(date.date,{
+                                        <Form.Control className={date.isSelected ? 'py-3 active date_picker' : 'py-3 date_picker'} disabled={!date.isSelected} type="text" style={{cursor:'auto'}} readOnly value={Intl.formatDate(date.date,{
                                             year: 'numeric',
                                             weekday: 'short',
                                             month:'long',
@@ -368,7 +406,6 @@ export default function Step4Screen(){
                                 )
                             })}
                         </Form>
-                        {(state.lessons.length !== i + 1) && <hr style={{margin:'2rem 0'}}/>}
                         </>
                         )
                     })}
@@ -379,13 +416,16 @@ export default function Step4Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
-                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5"><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5" onClick={handleLessonSave}><FormattedMessage id="btn_save_text"/></Button>
                         <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleLessonAdd}><FormattedMessage id="step4_add_lesson_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
                         <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
                         <Button className="btn--next py-2 px-2 py-sm-3 px-sm-3" onClick={()=>handleNextStep()}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
+                    {lessonsSaved && <div className="save--message">
+                        <p><CheckCircleIcon style={{fill:'#5CC3D2'}}/><span><FormattedMessage id="save--message" defaultMessage="הפרטים נשמרו בהצלחה"/></span></p>
+                    </div>}
                 </Row>
             </div>
         </div>

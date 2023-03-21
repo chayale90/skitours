@@ -180,7 +180,7 @@ const reducer = (state, action) => {
           return {...item,date:{...item.date,value:action.payload.deptDate}};
         })
         const lessons = state.lessons.map((lesson)=>{
-          return {...lesson,dates:[...action.payload.lessonDates]};
+          return {...lesson,dates:[...action.payload.lessonDates],name:{...lesson.name,value: action.payload.fullName}};
         })
         const equipments = state.equipments.map((equipment)=>{
           return {...equipment,

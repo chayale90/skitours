@@ -9,6 +9,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeftSharp';
 import { FormattedMessage,useIntl } from "react-intl";
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
+import CancelIcon from "@mui/icons-material/Cancel";
 import { getDateArray } from "front/utils";
 import Swal from "sweetalert2";
 
@@ -18,6 +19,13 @@ const reducer = function(state,action){
             return {...state, equipments: action.payload};
         case "ADD_EQUIPMENT":
             return {...state, equipments:[...state.equipments,action.payload]};
+        case "REMOVE_EQUIPMENT":{
+            let currentEquipments = state.equipments;
+            if (action.payload > -1) {
+                currentEquipments.splice(action.payload, 1);
+            }
+            return { ...state,equipments: currentEquipments }
+        }
         case "SAVE_NAME":
             return state;
         case "SAVE_FIELD":{
@@ -72,6 +80,10 @@ export default function Step3Screen(){
 
     function handleAddEquipment(){
         dispatch({type:"ADD_EQUIPMENT",payload:templateEquipments});
+    }
+
+    function handleRemoveEquipment(i){
+        dispatch({type: "REMOVE_EQUIPMENT", payload: i});
     }
 
     function handleSkipStep(){
@@ -167,8 +179,9 @@ export default function Step3Screen(){
                     {state.equipments.map((equipment,i)=>{
                         return (
 
-                            <Form key={i}>
+                            <Form key={i} style={{position:'relative'}}>
                                 {i != 0 && <hr/>}
+                                {i > 0 && <CancelIcon className="cancel-btn" onClick={(e)=>handleRemoveEquipment(i)}/>}
                             <Row>
                                 <Col md={6} sm={12}>
                                     <Form.Group controlId="userName" className="input-field-custom input-field-name my-3 position-relative">

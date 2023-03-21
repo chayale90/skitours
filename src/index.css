@@ -210,7 +210,7 @@ html[dir="rtl"] .field-title-icon{
 
 .input-field-custom input,
 .input-field-custom select{
-  font-family: 'Assistant';
+  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
@@ -250,6 +250,7 @@ html[dir="rtl"] .input-field-custom select{
 .input-field-custom textarea:focus{
   border: 1px solid #2B4159;
   box-shadow: none;
+  color: #2B4159
 }
 
 .input-field-custom label{
