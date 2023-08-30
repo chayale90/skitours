@@ -324,6 +324,7 @@ html[dir="rtl"] .time-icon {
   border-radius: 12px;
   overflow: hidden;
   width: fit-content;
+  width: 75%;
 }
 
 .btn.active {
@@ -438,6 +439,7 @@ html[dir="rtl"] .btn--next-wrapper {
     margin-right: 1rem;
     /* margin-left: 2rem; */
   }
+  
 }
 
 .btn--next,
@@ -468,7 +470,7 @@ html[dir="rtl"] .btn--next-wrapper {
 
 html[dir="rtl"] .btn--next {
   margin-left: 0;
-  margin-right: 1rem;
+  margin-right: 2rem;
   padding-left: 1rem !important;
   padding-right: 2rem !important;
 }
@@ -708,4 +710,7 @@ html[dir="ltr"] .form-select {
     left: 7px;
   }
 
+  .btn-group {
+    width: 100%;
+  }
 }

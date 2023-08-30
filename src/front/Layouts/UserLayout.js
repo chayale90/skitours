@@ -4,7 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../index.css';
 import '../../step1.css';
 import '../../step2.css';
+import '../../step3.css';
 import '../../step4.css';
+import '../../step5.css';
 import '../frontend.css';
 import {registerLocale} from 'react-datepicker';
 import {enUS,he} from 'date-fns/locale'

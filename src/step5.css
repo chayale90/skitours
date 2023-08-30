@@ -1,0 +1,20 @@
+
+.btn--next-wrapper1 {
+    display: flex;
+    justify-content:end;
+  }
+  
+@media (max-width: 767px) {
+    .btn--add{
+        width: 45%;
+    }
+    .btn--save{
+        width: 45%;
+    }
+    .btn--back{
+        width: 50%;
+    }
+    .btn--next{
+        width: 50%;
+    }
+}

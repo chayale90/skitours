@@ -344,12 +344,13 @@ export default function Step5Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={6} className="btn--others-wrapper">
-                        <Button className="btn--save py-3 px-5 d-none d-md-inline-block">Save</Button>
+                    <Col md={8} xs={6} className="btn--others-wrapper d-none d-md-inline-block">
+                        <Button className="btn--save py-3 px-5 ">Save</Button>
                     </Col>
-                    <Col md={4} xs={6} className="btn--next-wrapper">
-                        <Button className="btn--back py-3 px-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="btn--next py-3 px-3"><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
+
+                    <Col md={4} xs={12} className="btn--next-wrapper">
+                        <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
+                        <Button className="btn--next py-2 px-2 py-sm-3 px-sm-3"><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>
                 </Row>
             </div>

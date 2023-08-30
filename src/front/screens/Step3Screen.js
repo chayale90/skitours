@@ -232,7 +232,7 @@ export default function Step3Screen(){
                                 <Col md={5} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
                                 <Form.Label><img src="/images/calander.png" className="field-title-icon" /><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
-                                <div className="btn-group d-flex" data-toggle="buttons">
+                                <div className="btn-group d-flex w-100" data-toggle="buttons">
                                     <label className={equipment.age_type.value === 'child' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="child" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'child'} />
                                             <FormattedMessage id="step3_equipment_type_option_1"/>
@@ -335,8 +335,8 @@ export default function Step3Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
-                        <Button className="btn--save py-2 px-4 py-sm-3 px-sm-5" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
-                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
+                        <Button className="btn--save py-2 px-1 py-sm-3 px-sm-5" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-2 px-1 py-sm-3 px-sm-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
                         <Button className="btn--back py-2 px-2 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
