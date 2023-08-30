@@ -409,7 +409,7 @@ export default function Step2Screen(){
                     <div className="my-5 small-container w-100">
                         <Row>
                             <Col md={12} xs={12} className="btn--others-wrapper d-flex justify-content-sm-start mb-4">
-                                <Button className="btn--add py-2 px-3 py-sm-3 ms-3" onClick={handleArrivalAdd}><p><AddIcon/><FormattedMessage id="step2_add_arrival_btn" /></p></Button>
+                                <Button className="btn--add py-2 px-3 py-sm-3" onClick={handleArrivalAdd}><p><AddIcon/><FormattedMessage id="step2_add_arrival_btn" /></p></Button>
                                 <Button className="btn--save py-2 px-5 py-sm-3" onClick={handleArrivalSave}><FormattedMessage id="btn_save_text"/></Button>
                             </Col>
                             {arrivalSaved && <div className="save--message">
@@ -552,11 +552,11 @@ export default function Step2Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4 endpage">
-                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3 ms-3" onClick={handleDepartureAdd}><p><AddIcon/><FormattedMessage id="step2_add_departure_btn" /></p></Button>
+                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
+                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleDepartureAdd}><p><AddIcon/><FormattedMessage id="step2_add_departure_btn" /></p></Button>
                         <Button className="btn--save py-2 px-5 py-sm-3 px-sm-5 " onClick={handleDepartureSave}><FormattedMessage id="btn_save_text"/></Button>
                     </Col>
-                    <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">
+                    <Col md={4} xs={12} className="btn--next-wrapper mb-4">
                         <Button className="btn--back py-2 px-3 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
                         <Button className="btn--next py-2 px-3 py-sm-3 px-sm-3" onClick={handleNext}><FormattedMessage id="btn_next_step_text"/>  <KeyboardArrowRightIcon style={{width:'1.4em',height:'1.4em'}}/></Button>
                     </Col>

@@ -50,7 +50,7 @@
 }
 
 .step2 .btn--others-wrapper {
-    justify-content: end !important;
+    justify-content: space-between !important;
 }
 
 .step2 .btn--others-wrapper.endpage {

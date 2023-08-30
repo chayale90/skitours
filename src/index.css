@@ -414,7 +414,7 @@ html[dir="rtl"] .btn--add svg {
 .btn--next-wrapper {
   /* text-align: right; */
   display: flex;
-  justify-content: space-between !important;
+  justify-content: end;
 }
 
 html[dir="rtl"] .btn--next-wrapper {
@@ -461,7 +461,7 @@ html[dir="rtl"] .btn--next-wrapper {
 
 .btn--next {
   margin-left: 2rem;
-  padding-left: 2rem !important;
+  /* padding-left: 2rem !important; */
 }
 
 .btn--back {
