@@ -156,33 +156,37 @@ export default function Step4Screen(){
     }
 
     function handleDateCheck(e,index,date){
+        const Toast = Swal.mixin({
+            position: 'center',
+            toast: true,
+            backdrop: false,
+            grow: 'row',
+            padding: 0,
+            width: '55ch',
+            background: '#2B4159',
+            color: '#FFFFFF',
+            title: date.toLocaleDateString(),
+            confirmButtonText: 'כן, תודה',
+            cancelButtonText: 'לא, תודה שציינתם',
+            showCancelButton: true,
+            cancelButtonColor: '#FFFFFF',
+            confirmButtonColor: '#FFFFFF',
+            showCloseButton: true,
+            customClass: {
+                closeButton: 'toast-button toast-close-button',
+                confirmButton: 'toast-button',
+                cancelButton: 'toast-button'
+            }
+        });
         if(e.target.checked && new Date(arrivalDate).getTime() === new Date(date).getTime()){
-            Swal.fire({
-                icon:'warning',
-                iconColor: '#2B4159',
-                title: 'Are you sure?',
-                text: "This is your arrival date",
-                confirmButtonText: 'Ok',
-                showCancelButton: true,
-                cancelButtonColor: '#2B4159',
-                confirmButtonColor: '#2B4159',
-            }).then((result)=>{
+            Toast.fire({text: "זה יום ההגעה שלך, את/ה בטוח שתרצה הדרכה ביום זה ?"}).then((result)=>{
                 if(result.isConfirmed){
                     console.log("is confirmed")
                     dispatch({type:"SET_DATE_CHECK",  payload:{index,value:true,date}});
                 }
             })
         }else if(e.target.checked && new Date(departureDate).getTime() === new Date(date).getTime()){
-            Swal.fire({
-                icon:'warning',
-                iconColor: '#2B4159',
-                title: 'Are you sure?',
-                text: "This is your departure date",
-                confirmButtonText: 'Ok',
-                showCancelButton: true,
-                cancelButtonColor: '#2B4159',
-                confirmButtonColor: '#2B4159',
-            }).then((result)=>{
+            Toast.fire({text: "This is your departure date"}).then((result)=>{
                 if(result.isConfirmed){
                     dispatch({type:"SET_DATE_CHECK",  payload:{index,value:true,date}});
                 }
@@ -244,7 +248,7 @@ export default function Step4Screen(){
         dispatch({type:"SET_LESSONS",payload:lessons});
     },[])
 
-    return (<div className="container-sm">
+    return (<div className="container-sm step4">
         <Steps step4/>
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="form-container-box small-container w-100">
@@ -429,6 +433,12 @@ export default function Step4Screen(){
                     </div>}
                 </Row>
             </div>
+        </div>
+        <div className="my-4 my-md-2 d-flex justify-content-center">
+            <div className="my-5 small-container w-100">
+                <Row className="d-flex justify-content-between" id='toastContainer'>
+                    </Row>
+                </div>
         </div>
     </div>);
 }

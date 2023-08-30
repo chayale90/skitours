@@ -1,0 +1,94 @@
+.step2 .date_picker {
+    background-image: url("./images/calander.png");
+    background-size: 20px;
+
+    font-family: 'Inder';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+
+    color: #2B4159;
+
+    border-right: 0px solid #2B4159;
+    border-left: hidden;
+    background-color: #FDFDFD;
+}
+
+.step2 .input-field-custom .input-group {
+    background: #FDFDFD;
+    border: 1px solid #2B4159;
+    border-radius: 12px;
+}
+
+/* .step2 .input-group>.form-select {
+    flex: none;
+} */
+
+.step2 .sep {
+    position: absolute;
+    right: 65%;
+    top: 25%;
+    height: 50%;
+    border: 1px solid #2B4159;
+    z-index: 1;
+}
+
+.step2 select.time-picker {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #6A6A6A;
+    
+    left: 2px;
+    border-radius: 12px;
+    border-left: 0px solid #2B4159;
+    border-right: hidden;
+    background-color: #FDFDFD;
+}
+
+.step2 .btn--others-wrapper {
+    justify-content: end !important;
+}
+
+.step2 .btn--others-wrapper.endpage {
+    justify-content: start !important;
+}
+
+.step2 .save--message {
+    position: relative;
+    right: 104ch;
+}
+
+html[dir="ltr"] .step2 .save--message {
+    /* position: relative; */
+    right: -104ch;
+}
+
+html .step2 .save--message.endpage {
+    right: unset;
+}
+
+.step2 textarea.form-control.driverMsg {
+    background: #FDFDFD;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+}
+
+
+@media (max-width: 767px) {
+    .btn--add{
+        width: 50%;
+    }
+    .btn--save{
+        width: 50%;
+    }
+    .btn--back{
+        width: 50%;
+    }
+    .btn--next{
+        width: 50%;
+    }
+}

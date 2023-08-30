@@ -9,6 +9,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
 import { getDateArray, getDaysPrice } from "front/utils";
 import { capitalize } from "lodash";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function Step5Screen(){
     const {fullName,target,arrivalDate,departureDate,arrivals,departures,cities,equipments,equipmentTypes,lessons,lessonsData} = useApp();
@@ -111,6 +113,43 @@ export default function Step5Screen(){
         navigate('/step4');
     }
 
+    const downloadPrint = () => {
+        const toPrint = document.getElementById('to-print');
+        if (!toPrint)
+            return;
+
+        // html2canvas(toPrint).then(function(canvas) {
+        //     const canvasData = canvas.toDataURL("image/png");
+        //     const canvasWidth = canvas.width;
+        //     const canvasHeight = canvas.height;
+        //     const pdf = new jsPDF();
+        //     pdf.addImage(canvasData, 'JPEG', canvasWidth, canvasHeight);
+        //     pdf.save("order summary.pdf");
+        //     // pdf.autoPrint();
+        //     }
+        // );
+      
+        const doc = new jsPDF();
+        doc.html(`<html><body>${toPrint.innerHTML}</body></html>`,
+        {callback: function(doc) {
+            doc.save('order summary.pdf');
+            // alert(doc);
+            // doc.autoPrint();
+        }});
+        
+    };
+
+    const downloadPrint2 = () => {
+        const toPrint = document.getElementById('to-print');
+        if (!toPrint)
+            return;
+        const doc = window.open('', '_blank', "height=400,width=450");
+        doc.document.write(toPrint.outerHTML);
+        doc.document.write(`<style>${toPrint.style}</style>`);
+        doc.document.close();
+        doc.print();
+    };
+
     const Intl = useIntl();
     return (<div className="container-sm">
         <Steps step5/>
@@ -121,7 +160,7 @@ export default function Step5Screen(){
                     <p>Lorem Ipsum Dolor Sit Emmett, Constorer Edificing Alit Colores Monfred Adendum Silkoff, Emotional and Madagh Interchange and in their hearts Sulgak. Brait and lach zurek is blown, in the elements of Magmas.Shrachmadal who gritted.</p>
                     <div className="floating-btns">
                         <Button className="floating-btn--back d-none d-sm-inline-flex" onClick={(e)=>handleBackStep(e)}><KeyboardArrowLeftIcon/><FormattedMessage id="btn_back_text"/></Button>
-                        <Button className="floating-btn"><InfoIcon/>Download and print</Button>                   
+                        <Button className="floating-btn" onClick={downloadPrint2}><InfoIcon/>Download and print</Button>                   
                     </div>
                 </div>
                 <div className="py-md-4 px-md-5">
@@ -162,7 +201,7 @@ export default function Step5Screen(){
                         </Row>
                         
                         {(departures[0].isAdded || arrivals[0]?.isAdded) &&
-                        <Row style={{marginBottom:'2rem'}}>
+                        <Row style={{marginBottom:'2rem'}}  id='to-print'>
                             <Col md={12}>
                                 <Card className="main--card p-3">
                                     <Card.Title className="card--title">Transfers</Card.Title>

@@ -1,0 +1,21 @@
+.toast-button {
+    border-radius: 499px !important;
+    background: #FFF !important;
+    color: #2B4159 !important;
+    text-align: center;
+    font-size: 1rem;
+    font-family: Assistant;
+    font-weight: 700;
+}
+
+.toast-close-button {
+    border-radius: 18px !important;
+    background: #FFF !important;
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+    flex-shrink: 0 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-close {
+    align-self: start !important;
+}
