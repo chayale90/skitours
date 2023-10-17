@@ -335,7 +335,7 @@ export default function Step3Screen(){
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
                     <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
-                        <Button className="btn--save py-2 px-1 py-sm-3 px-sm-5" onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--save py-2 px-1 py-sm-3 px-sm-5 " onClick={handleSaveEquipment}><FormattedMessage id="btn_save_text"/></Button>
                         <Button className="btn--add py-2 px-1 py-sm-3 px-sm-3" onClick={handleAddEquipment}><FormattedMessage id="step3_add_equipment_btn"/> <i className="fa fa-plus" style={{'marginLeft': '7px'}}></i></Button>
                     </Col>
                     <Col md={4} xs={12} className="btn--next-wrapper d-flex mb-4">

@@ -379,13 +379,11 @@ html[dir="rtl"] .time-icon {
   background: #FFFFFF;
   border: 1px solid #2B4159;
   border-radius: 6px;
-
   font-family: 'Assistant';
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 26px;
-
   color: #2B4159;
 }
 
@@ -436,7 +434,7 @@ html[dir="rtl"] .btn--next-wrapper {
   }
 
   html[dir="rtl"] .btn--others-wrapper>button {
-    margin-right: 1rem;
+    /* margin-right: 1rem; */
     /* margin-left: 2rem; */
   }
   
