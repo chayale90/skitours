@@ -27,11 +27,13 @@
 
 .step2 .sep {
     position: absolute;
-    right: 65%;
+    /* right: 65%; */
     top: 25%;
     height: 50%;
     border: 1px solid #2B4159;
     z-index: 1;
+    right: 58%;
+
 }
 
 .step2 select.time-picker {
@@ -77,6 +79,9 @@ html .step2 .save--message.endpage {
     border-radius: 12px;
 }
 
+.step2 .blue-border{
+    border:1px solid #2B4159;
+  }
 
 @media (max-width: 767px) {
     .btn--add{

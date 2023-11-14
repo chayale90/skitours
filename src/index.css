@@ -26,7 +26,6 @@ body {
 
 .nav-link.active {
   color: rgb(43 65 89);
-  ;
 }
 
 .progresses {
@@ -234,7 +233,7 @@ select {
 }
 
 .input-field-custom select.empty {
-  color: #D0D0D0;
+  color: #d0d0d0;
 }
 
 .input-field-custom input::placeholder {
@@ -318,15 +317,23 @@ html[dir="rtl"] .time-icon {
   left: calc(30% - 8px);
 }
 
-.btn-group {
+/* .btn-group {
   background: #FDFDFD;
   border: 1px solid #E0E0E0;
   border-radius: 12px;
   overflow: hidden;
   width: fit-content;
   width: 75%;
+} */
+.btn-group {
+    background: #FDFDFD;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    overflow: hidden;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: 85%;
 }
-
 .btn.active {
   background: #2B4159;
 }
@@ -608,9 +615,9 @@ input.date_picker {
 }
 
 html[dir="rtl"] input.date_picker {
-  background-position: 4% 50%;
-  padding-right: 18px;
-  padding-left: 36px;
+ background-position: 90% 50%;
+    padding-right: 80px;
+    padding-left: 36px;
 }
 
 .react-datepicker-ingroup .react-datepicker-wrapper {

@@ -116,13 +116,13 @@ export default function Step1Screen(){
                         <Row>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
-                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}}/> <FormattedMessage id="step1_name_title"/></Form.Label>
+                                    <Form.Label><img src="/images/user-icon-light.png" style={{'marginRight': '5px'}} alt="snow-mountain"/> <FormattedMessage id="step1_name_title"/></Form.Label>
                                     <Form.Control className={state.fullName.isValid ? 'py-3' : 'py-3 is-invalid'} type="text" value={state.fullName.value} placeholder={Intl.formatMessage({id:'step1_name_placeholder'})} onChange={(e)=>dispatch({type:"FULLNAME_SAVE",payload:e.target.value})}/>
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="userName" className="input-field-custom my-3">
-                                    <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} /><FormattedMessage id="step1_target_title"/></Form.Label>
+                                    <Form.Label><img src="images/snow-mountain.png" style={{'marginRight': '5px'}} alt="snow-mountain"/><FormattedMessage id="step1_target_title"/></Form.Label>
                                     <Form.Select aria-label="Cities" className={`${!state.target.isValid && 'is-invalid'} py-3 ${!state.target.value && 'empty'}`} name="cities" value={state.target.value} onChange={(e)=>dispatch({type:"TARGET_SAVE",payload:e.target.value})}>
                                         <option value="" disabled selected>{Intl.formatMessage({id:'step1_target_Placeholder'})}</option>
                                         {cities?.map((city)=>{
@@ -136,7 +136,7 @@ export default function Step1Screen(){
                         <Row className="align-items-end">
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="date" className="input-field-custom my-3">
-                                <Form.Label><img src="images/calander.png" style={{'marginRight':'5px'}}/> <FormattedMessage id="step1_dates_title"/></Form.Label>
+                                <Form.Label><img src="images/calander.png" style={{'marginRight':'5px'}} alt="calander"/> <FormattedMessage id="step1_dates_title"/></Form.Label>
                                 <DatePicker
                                     className={state.arrDate.isValid ? 'py-3 date_picker form-control' : 'py-3 is-invalid date_picker form-control'}
                                     onChange={ handleArrDateChange }  

@@ -231,7 +231,7 @@ export default function Step3Screen(){
                             <Row className="align-items-end">
                                 <Col md={5} ms={12}>
                                 <Form.Group className="input-field-custom my-3">
-                                <Form.Label><img src="/images/calander.png" className="field-title-icon" /><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
+                                <Form.Label><img src="/images/calander.png" className="field-title-icon" alt="calander" /><FormattedMessage id="step3_equipment_type_title"/></Form.Label>
                                 <div className="btn-group d-flex w-100" data-toggle="buttons">
                                     <label className={equipment.age_type.value === 'child' ? 'btn active p-3' : 'btn p-3'}>
                                         <input onChange={(e)=>{handleInputGroupValue(e,i)}} type="radio" value="child" name="options" id="option2" autoComplete="off" checked={equipment.age_type.value === 'child'} />
