@@ -53,7 +53,7 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "react-scripts start --openssl-legacy-provider",
+    "start": "react-scripts --openssl-legacy-provider start" ,
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ghp": "react-scripts build && gh-pages -d build"
