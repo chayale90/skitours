@@ -112,7 +112,9 @@ export default function Step2Screen(){
 
     function handleDateChange(date,index,type){
         dispatch({type:"SAVE_FIELD",payload:{type,index,value:date,field:"date"}});
-    }
+    }  
+    const [isHotelBlueBorder, setIsHotelBlueBorder] = useState(false);
+    const [isflightNumbereBlueBorder, setIsflightNumbereBlueBorder] = useState(false);
 
     function handleFieldChange(e,index,type){
         if(e.target.name == 'vehicle'){
@@ -120,8 +122,17 @@ export default function Step2Screen(){
             if(vehicle) dispatch({type:"SAVE_FIELD", payload:{type,index, value:vehicle,field:e.target.name}});
             return;
         }
+        if (e.target.name === 'hotel') {
+            setIsHotelBlueBorder(e.target.value.trim() !== '');
+        }   
+        if (e.target.name === 'flight_number') {
+            setIsflightNumbereBlueBorder(e.target.value !== '');   
+        }
         dispatch({type:"SAVE_FIELD", payload:{type,index, value:e.target.value,field:e.target.name}});
     }
+  
+
+ 
 
     function handleRemoveTransfer(type,i){
         if(type === 'arrival'){
@@ -298,7 +309,7 @@ export default function Step2Screen(){
                                 <Row>
                                     <Col md={6} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
-                                            <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" /> <FormattedMessage id="step2_date_time_landing_title" /></Form.Label>
+                                            <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" alt="user-icon-light" /> <FormattedMessage id="step2_date_time_landing_title" /></Form.Label>
                                                 <InputGroup className="input-field-custom">
                                                     <DatePicker
                                                         className={arrival.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
@@ -315,7 +326,7 @@ export default function Step2Screen(){
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
                                                     </Form.Select>
-                                                    <img src="/images/time.png" className="time-icon" />
+                                                    <img src="/images/time.png" className="time-icon" alt="time-icon" />
                                                 </InputGroup>
                                         </Form.Group>
                                     </Col>
@@ -334,7 +345,7 @@ export default function Step2Screen(){
                                             </Col>
                                             <Col md={6} sm={12}>
                                                 <Form.Group className="input-field-custom my-3">
-                                                    <Form.Control className="py-3" name="flight_number" type="text" value={arrival.flight_number.value} placeholder={intl.formatMessage({id:"step2_flight_number_placeholder"})} onChange={(e)=>handleFieldChange(e,i,"arr")} />
+                                                    <Form.Control className={isflightNumbereBlueBorder?"blue-border py-3":"py-3"} name="flight_number" type="text" value={arrival.flight_number.value} placeholder={intl.formatMessage({id:"step2_flight_number_placeholder"})} onChange={(e)=>{  handleFieldChange(e,i,"arr")}} />
                                                 </Form.Group>
                                           </Col>
                                         </Row>
@@ -357,7 +368,7 @@ export default function Step2Screen(){
                                             <Col md={6} sm={12}>
                                                 <Form.Group className="input-field-custom my-3">
                                                     <Form.Label><FormattedMessage id="step2_hotel_title" /></Form.Label>
-                                                    <Form.Control className="py-3" type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={arrival.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"arr")} />
+                                                    <Form.Control className={isHotelBlueBorder ? 'blue-border py-3':'py-3'} type="text" placeholder={intl.formatMessage({id:'step2_hotel_placeholder'})} value={arrival.hotel.value} name="hotel" onChange={(e)=>handleFieldChange(e,i,"arr")} />
                                                 </Form.Group>
                                             </Col>
                                         </Row>
@@ -409,8 +420,8 @@ export default function Step2Screen(){
                     <div className="my-5 small-container w-100">
                         <Row>
                             <Col md={12} xs={12} className="btn--others-wrapper d-flex justify-content-sm-start mb-4">
-                                <Button className="btn--add py-2 px-3 py-sm-3" onClick={handleArrivalAdd}><p><AddIcon/><FormattedMessage id="step2_add_arrival_btn" /></p></Button>
                                 <Button className="btn--save py-2 px-5 py-sm-3" onClick={handleArrivalSave}><FormattedMessage id="btn_save_text"/></Button>
+                                <Button className="btn--add py-2 px-3 py-sm-3" onClick={handleArrivalAdd}><p><AddIcon/><FormattedMessage id="step2_add_arrival_btn" /></p></Button>
                             </Col>
                             {arrivalSaved && <div className="save--message">
                                     <p><CheckCircleIcon style={{fill:'#5CC3D2'}}/><span><FormattedMessage id="save--message" defaultMessage="הפרטים נשמרו בהצלחה"/></span></p>
@@ -440,7 +451,7 @@ export default function Step2Screen(){
                                 <Row>
                                     <Col md={6} sm={12}>
                                         <Form.Group className="input-field-custom my-3 react-datepicker-ingroup">
-                                            <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" /> <FormattedMessage id="step2_date_time_landing_title" /></Form.Label>
+                                            <Form.Label><img src="/images/user-icon-light.png" className="field-title-icon" alt="light-icon" /> <FormattedMessage id="step2_date_time_landing_title" /></Form.Label>
                                                 <InputGroup className="input-field-custom">
                                                     <DatePicker
                                                         className={departure.date.isValid ? 'py-3 date_picker form-control' : 'py-3 date_picker form-control is-invalid'}
@@ -457,7 +468,7 @@ export default function Step2Screen(){
                                                             return (<option key={i} value={slot}>{slot}</option>)
                                                         })}
                                                     </Form.Select>
-                                                    <img src="/images/time.png" className="time-icon" />
+                                                    <img src="/images/time.png" className="time-icon" alt="time"/>
                                                 </InputGroup>
                                         </Form.Group>
                                     </Col>
@@ -465,7 +476,7 @@ export default function Step2Screen(){
                                         <Row className="align-items-end">
                                           <Col md={6} sm={12}>
                                             <Form.Group className="input-field-custom my-3" style={{'whiteSpace':'nowrap'}}>
-                                                <Form.Label><img src="/images/flight.png" className="field-title-icon" /><FormattedMessage id="step2_airport_flight_number_heading" /></Form.Label>
+                                                <Form.Label><img src="/images/flight.png" className="field-title-icon" alt="flight" /><FormattedMessage id="step2_airport_flight_number_heading" /></Form.Label>
                                                 <Form.Select aria-label="Skipass" className={`py-3 ${!departure.airport.value && 'empty'}`} name="airport" value={departure.airport.value} onChange={(e)=>handleFieldChange(e,i,"dept")}>
                                                     <option value="" disabled>{intl.formatMessage({id:"step2_select_city_placeholder"})}</option>
                                                     {airports.length > 0 && airports?.map((item,i)=>{
@@ -552,9 +563,9 @@ export default function Step2Screen(){
         <div className="my-4 my-md-2 d-flex justify-content-center">
             <div className="my-5 small-container w-100">
                 <Row className="d-flex justify-content-between">
-                    <Col md={8} xs={12} className="btn--others-wrapper d-flex mb-4">
-                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleDepartureAdd}><p><AddIcon/><FormattedMessage id="step2_add_departure_btn" /></p></Button>
+                    <Col md={4} xs={12} className="btn--others-wrapper d-flex mb-4 justify-content-start">
                         <Button className="btn--save py-2 px-5 py-sm-3 px-sm-5 " onClick={handleDepartureSave}><FormattedMessage id="btn_save_text"/></Button>
+                        <Button className="btn--add py-2 px-2 py-sm-3 px-sm-3" onClick={handleDepartureAdd}><p><AddIcon/><FormattedMessage id="step2_add_departure_btn" /></p></Button>
                     </Col>
                     <Col md={4} xs={12} className="btn--next-wrapper mb-4">
                         <Button className="btn--back py-2 px-3 py-sm-3 px-sm-3" onClick={handleBackStep}><KeyboardArrowLeftIcon style={{width: '1.4em',height:'1.4em'}}/> <FormattedMessage id="btn_back_text"/></Button>
